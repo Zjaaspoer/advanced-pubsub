@@ -58,7 +58,31 @@ angular.module('awesome.services.events', [])
 			//noinspection FunctionWithMultipleLoopsJS
 			self.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, argumentsEvent) {
 
+				// If listenerName is not a non empty string
+				if (check && typeof listenerName !== 'string' || listenerName === '')
 
+					// Throw error
+					throw new Error('listenerName should be a non empty string');
+
+				// If eventNameOrEventNamesObject is not a non empty string or a non empty array (perf1)
+				if (check && !(typeof eventNameOrEventNamesObject === 'string' && eventNameOrEventNamesObject !== '') && !(Array.isArray(eventNameOrEventNamesObject) && eventNameOrEventNamesObject.length > 0))
+
+					// Throw error
+					throw new Error('eventNameOrEventNamesObject should be a non empty string or a non empty array');
+
+				// If eventNameOrEvenNamesObject is not a non empty string (perf2)
+				if (check && typeof listener !== 'function')
+
+					// Throw error
+					throw new Error('listener should be a function');
+
+				// If checkMemory is not undefined or a Boolean
+				if (check && typeof checkMemory !== 'undefined' && typeof checkMemory !== 'boolean')
+
+					// Throw error
+					throw new Error('(Optional) checkMemory should be a boolean');
+
+				// TODO: Create argumentsEvent check
 
 				// If this is a single event
 				if (typeof eventNameOrEventNamesObject === 'string') {
@@ -197,6 +221,12 @@ angular.module('awesome.services.events', [])
 			//noinspection FunctionWithMultipleLoopsJS
 			self.dispatchEvent = function(eventName) {
 
+				// If eventName is not a non empty string
+				if (check && typeof eventName !== 'string' || eventName === '')
+
+					// Throw error
+					throw new Error('eventName should be a non empty string');
+
 				// Verbose
 				if (verbose) { //noinspection JSHint
 					console.log('%cdispatchEvent:\t\t\t\t\t\t%s', consoleColors.dispatchEvent, eventName);
@@ -258,6 +288,12 @@ angular.module('awesome.services.events', [])
 			//noinspection FunctionWithMultipleLoopsJS
 			self.clearEventFromMemory = function(eventName) {
 
+				// If eventName is not a non empty string
+				if (check && typeof eventName !== 'string' || eventName === '')
+
+					// Throw error
+					throw new Error('eventName should be a non empty string');
+
 				// Verbose
 				if (verbose) console.log('%cmemory: clear\t\t\t\t\t\t%s', consoleColors['memory: clear'], eventName);
 
@@ -285,6 +321,12 @@ angular.module('awesome.services.events', [])
 			// Remove a specific event listener
 			//noinspection FunctionWithMultipleLoopsJS
 			self.removeEventListener = function removeEventListener(listenerName) {
+
+				// If listenerName is not a non empty string
+				if (check && typeof listenerName !== 'string' || listenerName === '')
+
+					// Throw error
+					throw new Error('listenerName should be a non empty string');
 
 				// TODO: Perf question: Is it better to splice or to null, looking at looping performance of the array later on
 				// TODO: This loop can be done via a lookup per listenerName too
@@ -317,6 +359,12 @@ angular.module('awesome.services.events', [])
 
 			// Remove an array of event listeners
 			self.removeEventListeners = function(listenerNames) {
+
+				// If listenerNames is not an array (perf1)
+				if (check && !Array.isArray(listenerNames))
+
+					// Throw error
+					throw new Error('listenerNames should be an array');
 
 				// Verbose
 				if (verbose) console.log('%clisteners: clear\t\t\t%s', consoleColors['listeners: clear'], listenerNames);
