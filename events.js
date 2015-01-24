@@ -69,7 +69,7 @@ angular.module('awesome.services.events', [])
 					// If check is enabled and this event has an eventRef, check that this listener does not exist yet
 					if (check) {
 						// Loop through all of the events
-						for (var iKey = 0, eventNames = _.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++)
+						for (var iKey = 0, eventNames = Object.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++)
 							// Loop through all the singleListeners
 							for (var iListener = 0, listenersLength = eventRefs[eventNames[iKey]].singleListeners.length; iListener < listenersLength; iListener++)
 								// If this listener is not nulled (because of the clearEventListener method) & If the listenerName is the same
@@ -293,7 +293,7 @@ angular.module('awesome.services.events', [])
 				if (verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
 
 				// Loop through all the eventRefs
-				for (var iKey = 0, eventNames = _.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++) {
+				for (var iKey = 0, eventNames = Object.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++) {
 
 					// Loop through the singleListeners
 					for (var iListener = 0, lengthListeners = eventRefs[eventNames[iKey]].singleListeners.length; iListener < lengthListeners; iListener++) {
