@@ -377,12 +377,30 @@ angular.module('awesome.services.events', [])
 
 
 
+			// Update config
+			self.updateConfig = function(newConfig) {
+
+				// If the check key is a boolean
+				if(typeof newConfig.check === 'boolean')
+
+					// Set the new check value
+					config.check = newConfig.check;
+
+				// If the check key is a boolean
+				if(typeof newConfig.verbose === 'boolean')
+
+					// Set the new check value
+					config.verbose = newConfig.verbose;
+			};
+
+
+
 			// Parse an event names object
 			//noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMultipleLoopsJS
 			function parseEventNamesObject(operatorsOriginal, memory) {
 
 				// First check the object if needed
-				if (check)
+				if (check && false)
 					for (var i = 0, length = operatorsOriginal.length; i < length; i++) {
 
 						if (i % 2 === 0 && typeof operatorsOriginal[i] !== 'string' && Object.prototype.toString.call(operatorsOriginal[i]) !== '[object Array]' && typeof operatorsOriginal[i] !== 'boolean')
