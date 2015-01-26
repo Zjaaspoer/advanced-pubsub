@@ -253,11 +253,14 @@ angular.module('awesome.services.events5', [])
 			//noinspection FunctionWithMultipleLoopsJS
 			thisService.dispatchEvent = function(eventName) {
 
-				// If eventName is not a non empty string
-				if (typeof eventName !== 'string' || eventName === '')
+				// Check
+				if (config.checks)
 
-					// Throw error
-					throw new Error('eventName should be a non empty string');
+					// If eventName is not a non empty string
+					if (typeof eventName !== 'string' || eventName === '')
+
+						// Throw error
+						throw new Error('eventName should be a non empty string');
 
 				// Verbose
 				if (config.verbose) console.log('%cdispatchEvent:\t\t\t\t\t\t%s', consoleColors.dispatchEvent, eventName);
