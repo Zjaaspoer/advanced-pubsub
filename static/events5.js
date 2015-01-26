@@ -15,8 +15,7 @@ angular.module('awesome.services.events4', [])
 		var config = {
 			checks: false,
 			verbose: false,
-			storeArguments: false,
-			passThroughArguments: false
+			storeArguments: false
 		};
 
 
@@ -323,17 +322,8 @@ angular.module('awesome.services.events4', [])
 						// Verbose
 						if (config.verbose) console.log('%ccallListener (single):\t\t\t\t%s\t%s', consoleColors['callListener (single)'], eventName, singleListener.listenerName);
 
-						// If the arguments need to be passed through
-						if (config.passThroughArguments)
-
-							// Apply the listener
-							singleListener.listener.apply(null, eventArguments);
-
-						// If they don't need to be passed through
-						else
-
-							// Call the listener
-							singleListener.listener(eventName);
+						// Apply the listener
+						singleListener.listener.apply(null, eventArguments);
 
 					});
 
@@ -523,12 +513,6 @@ angular.module('awesome.services.events4', [])
 
 					// Set the new checks value
 					config.checks = newConfig.checks;
-
-				// If the passThroughArguments key is a boolean
-				if (typeof newConfig.passThroughArguments === 'boolean')
-
-					// Set the new passThroughArguments value
-					config.passThroughArguments = newConfig.passThroughArguments;
 
 				// If the storeArguments key is a boolean
 				if (typeof newConfig.storeArguments === 'boolean')
