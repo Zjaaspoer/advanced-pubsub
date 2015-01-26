@@ -86,13 +86,13 @@ angular.module('awesome.services.events5', [])
 						// If a singleListener with the same listenerName can be found
 						if (findByKey(eventRef.singleListeners, 'listenerName', listenerName))
 
-							// Throw an error
+							// Throw error
 							throw new Error('Listener \'' + listenerName + '\' is already registered');
 
 						// If a multiListener with the same listenerName can be found
 						if (findByKey(eventRef.multiListeners, 'listenerName', listenerName))
 
-							// Throw an error
+							// Throw error
 							throw new Error('Listener \'' + listenerName + '\' is already registered');
 
 					});
@@ -559,9 +559,13 @@ angular.module('awesome.services.events5', [])
 					each(operatorsOriginal, function(operatorOriginal, i) {
 
 						if (i % 2 === 0 && typeof operatorOriginal !== 'string' && Object.prototype.toString.call(operatorOriginal) !== '[object Array]' && typeof operatorOriginal !== 'boolean')
+
+							// Throw error
 							throw new Error('Even element should be a string or a (sub)array. It is of type \'' + typeof operatorOriginal + '\' and of value \'' + operatorOriginal + '\'');
 
 						if (i % 2 === 1 && operatorOriginal !== '&&' && operatorOriginal !== '||')
+
+							// Throw error
 							throw new Error('Uneven element should be \'&&\' or \'&&\'. It is of type \'' + typeof operatorOriginal + '\' and of value \'' + operatorOriginal + '\'');
 
 					});
