@@ -886,8 +886,7 @@ angular.module('awesome.services.events5', [])
 
 
 
-			// Set the statuschange events
-			// TODO: Move this to a separate Angular implementation
+			// Set the native events
 			(function() {
 
 				// init a local reference to $rootScope
