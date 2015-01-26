@@ -746,14 +746,16 @@ angular.module('awesome.services.events5', [])
 				// Checks
 				if (config.checks)
 
-					// First check the object if needed
+					// Loop over the operators
 					each(operatorsOriginal, function(operatorOriginal, i) {
 
-						if (i % 2 === 0 && typeof operatorOriginal !== 'string' && Object.prototype.toString.call(operatorOriginal) !== '[object Array]' && typeof operatorOriginal !== 'boolean')
+						// Even and not a string, array or boolean
+						if (i % 2 === 0 && typeof operatorOriginal !== 'string' && !(operatorOriginal instanceof Array) && typeof operatorOriginal !== 'boolean')
 
 							// Throw error
 							throw new Error('Even element should be a string or a (sub)array. It is of type \'' + typeof operatorOriginal + '\' and of value \'' + operatorOriginal + '\'');
 
+						// Uneven, and not one of the two allowed operators (&& or ||)
 						if (i % 2 === 1 && operatorOriginal !== '&&' && operatorOriginal !== '||')
 
 							// Throw error
@@ -761,20 +763,20 @@ angular.module('awesome.services.events5', [])
 
 					});
 
-				var
-					// Run 1: Create a fresh object, copy the arrays, and parse the strings
-					eventNamesObject = [];
+				// Step 1: Create a fresh object, copy the arrays, and parse the strings
+				// Init new eventNamesObject
+				var eventNamesObject = [];
 
 				// Loop over all the operators
 				each(operatorsOriginal, function(operatorOriginal, i) {
 
-					// On the even values
+					// Even
 					if (i % 2 === 0) {
 
-						// If this is a string
+						// If this is an eventName
 						if (typeof operatorOriginal === 'string')
 
-							// Parse the value
+							// See if the eventName is part of the listenerEventsMemory
 							eventNamesObject[i] = indexOf(listenerEventsMemory, operatorOriginal) !== -1;
 
 						// Else if this is not a string (and therefore an array)
@@ -785,7 +787,7 @@ angular.module('awesome.services.events5', [])
 
 					}
 
-					// on the uneven values
+					// Uneven
 					else
 
 						// Just copy the operator
@@ -793,80 +795,132 @@ angular.module('awesome.services.events5', [])
 
 				});
 
-				// Run 2: Resolve all '&&'s
-				var k = 0;
-				// While the k has not reached the 'end' of the array
-				while (k <= eventNamesObject.length - 3) {
-					// If this is an '&&' situation
-					if (eventNamesObject[k + 1] === '&&') {
-						// If one of them is false, the result is false
-						if (eventNamesObject[k] === false || eventNamesObject[k + 2] === false)
-							eventNamesObject.splice(k, 3, false);
-						// Else if both are a boolean, parse the result
-						else if (typeof eventNamesObject[k] === 'boolean' && typeof eventNamesObject[k + 2] === 'boolean')
-							eventNamesObject.splice(k, 3, eventNamesObject[k] && eventNamesObject[k + 2]);
-						// Else go one
+				// Step 2: Resolve all '&&'s
+				// Init iStep2
+				var iStep2 = 0;
+
+				// While the iStep2 has not reached the 'end' of the array
+				while (iStep2 <= eventNamesObject.length - 3) {
+
+					// If this is a '&&' situation
+					if (eventNamesObject[iStep2 + 1] === '&&') {
+
+						// If one of them is false
+						if (eventNamesObject[iStep2] === false || eventNamesObject[iStep2 + 2] === false)
+
+							// The result is false
+							eventNamesObject.splice(iStep2, 3, false);
+
+						// Else if both are a boolean
+						else if (typeof eventNamesObject[iStep2] === 'boolean' && typeof eventNamesObject[iStep2 + 2] === 'boolean')
+
+							// The result is the comparison
+							eventNamesObject.splice(iStep2, 3, eventNamesObject[iStep2] && eventNamesObject[iStep2 + 2]);
+
+						// Else
 						else
-							k += 2;
+
+							// Move on
+							iStep2 += 2;
+
 					}
-					// If this is not an '&&', move on
+
+					// If this is not a '&&'
 					else
-						k += 2;
+
+						// Move on
+						iStep2 += 2;
+
 				}
 
-				// Run 3: Resolve all '||'s
-				var l = 0;
-				// While the i has not reached the 'end' of the array
-				while (l <= eventNamesObject.length - 3) {
-					// If this is an '||' situation
-					if (eventNamesObject[l + 1] === '||') {
-						// If one of them is false, the result is false
-						if (eventNamesObject[l] === true || eventNamesObject[l + 2] === true)
-							eventNamesObject.splice(l, 3, true);
-						// Else if both are a boolean, parse the result
-						else if (typeof eventNamesObject[l] === 'boolean' && typeof eventNamesObject[l + 2] === 'boolean')
-							eventNamesObject.splice(l, 3, eventNamesObject[l] || eventNamesObject[l + 2]);
-						// Else go one
+				// Step 3: Resolve all '||'s
+				// Init iStep3
+				var iStep3 = 0;
+
+				// While the iStep3 has not reached the 'end' of the array
+				while (iStep3 <= eventNamesObject.length - 3) {
+
+					// If this is a '||' situation
+					if (eventNamesObject[iStep3 + 1] === '||') {
+
+						// If one of them is false
+						if (eventNamesObject[iStep3] === true || eventNamesObject[iStep3 + 2] === true)
+
+							// The result is false
+							eventNamesObject.splice(iStep3, 3, true);
+
+						// Else if both are a boolean
+						else if (typeof eventNamesObject[iStep3] === 'boolean' && typeof eventNamesObject[iStep3 + 2] === 'boolean')
+
+							// The result is the comparison
+							eventNamesObject.splice(iStep3, 3, eventNamesObject[iStep3] || eventNamesObject[iStep3 + 2]);
+
+						// Else
 						else
-							l += 2;
+
+							// Move on
+							iStep3 += 2;
 					}
-					// If this is not an '||', move on
+					// If this is not a '||'
 					else
-						l += 2;
+
+						// Move on
+						iStep3 += 2;
+
 				}
 
-				// Run 4: Parse all the subarrays
+				// Step 4: Parse all the subarrays
 				// Loop over all the elements in the array
 				each(eventNamesObject, function(eventNameObject, i) {
 
 					// If this is a array
-					if (Object.prototype.toString.call(eventNameObject) === '[object Array]')
+					if (eventNameObject instanceof Array)
 
-						// Recursive parse
+						// Do a recursive pass
 						eventNamesObject[i] = parseEventNamesObject(eventNameObject, listenerEventsMemory);
 
 				});
 
-				// Run 5: Finally resolve all the '&&'s (for explanation see step 2)
-				var n = 0;
+				// Step 5: Finally resolve all the '&&'s (for explanation see step 2)
+				// Init step5
+				var iStep5 = 0;
 
-				while (n <= eventNamesObject.length - 3) {
-					if (eventNamesObject[n + 1] === '&&')
-						eventNamesObject.splice(n, 3, eventNamesObject[n] && eventNamesObject[n + 2]);
+				// While the iStep5 has not reached the 'end' of the array
+				while (iStep5 <= eventNamesObject.length - 3) {
 
+					// If this is a '&&' situation
+					if (eventNamesObject[iStep5 + 1] === '&&')
+
+						// The result is the comparison
+						eventNamesObject.splice(iStep5, 3, eventNamesObject[iStep5] && eventNamesObject[iStep5 + 2]);
+
+					// Else
 					else
-						n += 2;
+
+						// Move on
+						iStep5 += 2;
+
 				}
 
-				// Run 6: Finally resolve all the '||'s (for explanation see step 2)
-				var o = 0;
+				// Step 6: Finally resolve all the '||'s (for explanation see step 2)
+				// Init step6
+				var iStep6 = 0;
 
-				while (o <= eventNamesObject.length - 3) {
-					if (eventNamesObject[o + 1] === '||')
-						eventNamesObject.splice(o, 3, eventNamesObject[o] || eventNamesObject[o + 2]);
+				// While the iStep6 has not reached the 'end' of the array
+				while (iStep6 <= eventNamesObject.length - 3) {
 
+					// If this is a '||' situation
+					if (eventNamesObject[iStep6 + 1] === '||')
+
+						// The result is the comparison
+						eventNamesObject.splice(iStep6, 3, eventNamesObject[iStep6] || eventNamesObject[iStep6 + 2]);
+
+					// Else
 					else
-						o += 2;
+
+						// Move on
+						iStep6 += 2;
+
 				}
 
 				// Return the found object
