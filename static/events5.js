@@ -6,8 +6,8 @@
 
 // TODO: Guarantee that listeners will be fired in the order that they have been added?
 
-angular.module('awesome.services.events4', [])
-	.provider('events4', function() {
+angular.module('awesome.services.events5', [])
+	.provider('events5', function() {
 
 
 
