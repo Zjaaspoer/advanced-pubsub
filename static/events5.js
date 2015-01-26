@@ -38,8 +38,7 @@ angular.module('awesome.services.events4', [])
 			// Init variables
 			var
 				// TODO: Is this the right way to do this with a provider?
-				// TODO: Rename self to better name
-				self = {},
+				thisService = {},
 				eventsMemory = [],
 				eventMemoryObjects = [],
 				eventRefs = [],
@@ -60,7 +59,7 @@ angular.module('awesome.services.events4', [])
 
 			// Add event listener
 			//noinspection FunctionWithMultipleLoopsJS
-			self.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
+			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
 
 				// Checks
 				if (config.checks) {
@@ -249,7 +248,7 @@ angular.module('awesome.services.events4', [])
 
 
 			// Clear all (mainly for testing purposes)
-			self.clearAll = function() {
+			thisService.clearAll = function() {
 
 				// Clear all arrays
 				while (eventsMemory.length > 0) eventsMemory.pop();
@@ -262,7 +261,7 @@ angular.module('awesome.services.events4', [])
 
 			// Dispatch an event
 			//noinspection FunctionWithMultipleLoopsJS
-			self.dispatchEvent = function(eventName) {
+			thisService.dispatchEvent = function(eventName) {
 
 				// If eventName is not a non empty string
 				if (typeof eventName !== 'string' || eventName === '')
@@ -357,7 +356,7 @@ angular.module('awesome.services.events4', [])
 
 			// Clear an event from eventsMemory
 			//noinspection FunctionWithMultipleLoopsJS
-			self.clearEventFromMemory = function(eventName) {
+			thisService.clearEventFromMemory = function(eventName) {
 
 				// TODO: Also do a check to make sure this eventName exits!
 
@@ -428,7 +427,7 @@ angular.module('awesome.services.events4', [])
 
 			// Remove a specific event listener
 			//noinspection FunctionWithMultipleLoopsJS
-			self.removeEventListener = function removeEventListener(listenerName) {
+			thisService.removeEventListener = function removeEventListener(listenerName) {
 
 				// TODO: Also do a check to make sure this listenerName exits!
 
@@ -479,7 +478,7 @@ angular.module('awesome.services.events4', [])
 
 
 			// Remove an array of event listeners
-			self.removeEventListeners = function(listenerNames) {
+			thisService.removeEventListeners = function(listenerNames) {
 
 				// Checks
 				if (config.checks)
@@ -497,7 +496,7 @@ angular.module('awesome.services.events4', [])
 				each(listenerNames, function(listenerName) {
 
 					// Remove the listenerName
-					self.removeEventListener(listenerName);
+					thisService.removeEventListener(listenerName);
 
 				});
 
@@ -506,7 +505,7 @@ angular.module('awesome.services.events4', [])
 
 
 			// Update config (mainly for testing purposes)
-			self.updateConfig = function(newConfig) {
+			thisService.updateConfig = function(newConfig) {
 
 				// If the checks key is a boolean
 				if (typeof newConfig.checks === 'boolean')
@@ -831,7 +830,7 @@ angular.module('awesome.services.events4', [])
 					$rootScope = $injector.get('$rootScope');
 					// TODO: Do this with a more elegant call/apply method
 					$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-						self.dispatchEvent('native.$stateChangeStart', event, toState, toParams, fromState, fromParams);
+						thisService.dispatchEvent('native.$stateChangeStart', event, toState, toParams, fromState, fromParams);
 					});
 
 				}
@@ -841,7 +840,7 @@ angular.module('awesome.services.events4', [])
 					if (!$rootScope)
 						$rootScope = $injector.get('$rootScope');
 					$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-						self.dispatchEvent('native.$stateChangeSuccess', event, toState, toParams, fromState, fromParams);
+						thisService.dispatchEvent('native.$stateChangeSuccess', event, toState, toParams, fromState, fromParams);
 					});
 
 				}
@@ -849,8 +848,9 @@ angular.module('awesome.services.events4', [])
 			})();
 
 
-			// TODO: Is this the right way to do this?
-			return self;
+
+			// Return thisService
+			return thisService;
 
 		};
 
