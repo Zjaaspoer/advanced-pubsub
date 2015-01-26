@@ -149,6 +149,13 @@ angular.module('events', [
 					function testListener4() { listener4FireCount++; if(config.verbose) console.log(i + '_testListener4'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
 					function testListener5() { listener5FireCount++; if(config.verbose) console.log(i + '_testListener5'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
 					function testListener6() { listener6FireCount++; if(config.verbose) console.log(i + '_testListener6'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
+					function testListener7() { listener7FireCount++; if(config.verbose) console.log(i + '_testListener7'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener8() { listener8FireCount++; if(config.verbose) console.log(i + '_testListener8'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+
+
+
+					// Single event without memory, destroying itself
+					events.addSelfDestroyingEventListener(i + '_testListener8', i + '_testEvent1', testListener8);
 
 
 
@@ -240,6 +247,11 @@ angular.module('events', [
 
 
 
+					// Single event with memory, destroying itself
+					events.addSelfDestroyingEventListener(i + '_testListener7', i + '_testEvent1', testListener7, true);
+
+
+
 					// Concluding event
 					events.addEventListener(i + '_testFinalListener', i + '_testEvent3', function() {
 
@@ -281,6 +293,8 @@ angular.module('events', [
 					if (listener4FireCount			!== 4 * cycles.length) debugger;
 					if (listener5FireCount			!== 1 * cycles.length) debugger;
 					if (listener6FireCount			!== 2 * cycles.length) debugger;
+					if (listener7FireCount			!== 1 * cycles.length) debugger;
+					if (listener8FireCount			!== 1 * cycles.length) debugger;
 					if (test.checks) {
 						if (listener0FireCount		!== 2 * cycles.length) debugger;
 						if (listener1FireCount		!== 3 * cycles.length) debugger;
