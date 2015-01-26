@@ -658,28 +658,33 @@ angular.module('awesome.services.events5', [])
 				// Create the flat array
 				eventNamesFlat = eventNamesFlat || [];
 
-				// TODO: Make a each() out of this one
-				for (var i = 0, operatorsLength = operatorsOriginal.length; i < operatorsLength; i += 2) {
+				// Loop over the operatorsOriginal
+				each(operatorsOriginal, function(operatorOriginal, i) {
 
-					// If the operator is a string
-					if (typeof operatorsOriginal[i] === 'string') {
+					// Only do this fo the even elements (the eventNames / subArrays and not the operators)
+					if (i % 2 === 0) {
 
-						// And the value is not already in the array
-						// PERFORMANCE [1] array.push()
-						if (indexOf(eventNamesFlat, operatorsOriginal[i]) === -1)
+						// If the operator is a string
+						if (typeof operatorOriginal === 'string') {
 
-							// Push it in
-							eventNamesFlat.push(operatorsOriginal[i]);
+							// And the value is not already in the array
+							// PERFORMANCE [1] array.push()
+							if (indexOf(eventNamesFlat, operatorOriginal) === -1)
+
+								// Push it in
+								eventNamesFlat.push(operatorOriginal);
+
+						}
+
+						// Else assume it's an array
+						else
+
+							// Recurse over that array
+							flattenEventNamesObject(operatorOriginal, eventNamesFlat);
 
 					}
 
-					// Else assume it's an array
-					else
-
-						// Recurse over that array
-						flattenEventNamesObject(operatorsOriginal[i], eventNamesFlat);
-
-				}
+				});
 
 				// Return the flat array
 				return eventNamesFlat;
