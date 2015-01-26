@@ -823,27 +823,29 @@ angular.module('awesome.services.events4', [])
 			// TODO: Move this to a separate Angular implementation
 			(function() {
 
+				// init a local reference to $rootScope
 				var $rootScope;
 
-				if (config.stateChangeStart) {
+				// Only if there are configured nativeEvents
+				if (config.nativeEvents)
 
-					$rootScope = $injector.get('$rootScope');
-					// TODO: Do this with a more elegant call/apply method
-					$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-						thisService.dispatchEvent('native.$stateChangeStart', event, toState, toParams, fromState, fromParams);
+					// Loop over the native events
+					each(config.nativeEvents, function(nativeEvent) {
+
+						// If $rootScope does not exist yet
+						if (!$rootScope)
+
+							// Inject $rootScope
+							$rootScope = $injector.get('$rootScope');
+
+						// On the native event
+						$rootScope.$on(nativeEvent, function() {
+
+							// Dispatch the native event
+							thisService.dispatchEvent(['native.' + nativeEvent].concat(arguments));
+						});
+
 					});
-
-				}
-
-				if (config.stateChangeSuccess) {
-
-					if (!$rootScope)
-						$rootScope = $injector.get('$rootScope');
-					$rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-						thisService.dispatchEvent('native.$stateChangeSuccess', event, toState, toParams, fromState, fromParams);
-					});
-
-				}
 
 			})();
 
