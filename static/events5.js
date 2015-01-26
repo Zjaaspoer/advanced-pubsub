@@ -438,8 +438,6 @@ angular.module('awesome.services.events5', [])
 						// Throw error
 						throw new Error('listenerName should be a non empty string');
 
-				// TODO: This loop can be done via a lookup per listenerName too (???)
-
 				// Verbose
 				if (config.verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
 
