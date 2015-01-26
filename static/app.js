@@ -25,27 +25,33 @@ angular.module('events', [
 	'awesome.services.events2',
 	'awesome.services.events3',
 	'awesome.services.events4',
+	'awesome.services.events5',
 	'awesome.services.events2Opt',
 	'awesome.services.events3Opt',
-	'awesome.services.events4Opt'
+	'awesome.services.events4Opt',
+	'awesome.services.events5Opt'
 ])
 	.config(function(
 		eventsProvider,
 		events2Provider,
 		events3Provider,
 		events4Provider,
+		events5Provider,
 		events2OptProvider,
 		events3OptProvider,
-		events4OptProvider
+		events4OptProvider,
+		events5OptProvider
 	) {
 
 		eventsProvider.config(config);
 		events2Provider.config(config);
 		events3Provider.config(config);
 		events4Provider.config(config);
+		events5Provider.config(config);
 		events2OptProvider.config(config);
 		events3OptProvider.config(config);
 		events4OptProvider.config(config);
+		events5OptProvider.config(config);
 
 	})
 	.controller('AppController', function(
@@ -53,9 +59,11 @@ angular.module('events', [
 		events2,
 		events3,
 		events4,
+		events5,
 		events2Opt,
 		events3Opt,
-		events4Opt
+		events4Opt,
+		events5Opt
 	) {
 
 		var eventsRefs = {
@@ -63,9 +71,11 @@ angular.module('events', [
 			//events2: events2,
 			//events3: events3,
 			//events4: events4,
+			//events5: events5,
 			events2Opt: events2Opt,
 			events3Opt: events3Opt,
-			events4Opt: events4Opt
+			events4Opt: events4Opt,
+			events5Opt: events5Opt
 		};
 		var checks = [];
 		var storeArguments = [];
