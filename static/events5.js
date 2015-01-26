@@ -51,7 +51,7 @@ angular.module('awesome.services.events5', [])
 
 			// Add event listener
 			//noinspection FunctionWithMultipleLoopsJS
-			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
+			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, selfDestroying) {
 
 				// Checks
 				if (config.checks) {
@@ -113,7 +113,8 @@ angular.module('awesome.services.events5', [])
 					// Create a new newListenerObject
 					var newListenerObject = {
 						listenerName: listenerName,
-						listener: listener
+						listener: listener,
+						selfDestroying: !!selfDestroying
 					};
 
 					// Add the listener
@@ -137,6 +138,12 @@ angular.module('awesome.services.events5', [])
 								// Apply the listener with the stored arguments
 								listener.apply(null, eventMemoryObject.arguments);
 
+								// If this is a selfDestroying eventListener
+								if (selfDestroying)
+
+									// Remove the eventListener
+									thisService.removeEventListener(listenerName);
+
 							}
 
 						}
@@ -152,6 +159,12 @@ angular.module('awesome.services.events5', [])
 
 								// Call the listener
 								listener(eventName);
+
+								// If this is a selfDestroying eventListener
+								if (selfDestroying)
+
+									// Remove the eventListener
+									thisService.removeEventListener(listenerName);
 
 							}
 
@@ -176,7 +189,8 @@ angular.module('awesome.services.events5', [])
 						eventNamesObject: eventNamesObject,
 						eventNamesFlat: flattenEventNamesObject(eventNamesObject),
 						listener: listener,
-						eventsMemory: []
+						eventsMemory: [],
+						selfDestroying: !!selfDestroying
 					};
 
 					// Loop over the eventNamesFlat
@@ -224,6 +238,12 @@ angular.module('awesome.services.events5', [])
 							// Call the listener
 							listener();
 
+							// If this is a selfDestroying eventListener
+							if (selfDestroying)
+
+								// Remove the eventListener
+								thisService.removeEventListener(listenerName);
+
 						}
 
 					}
@@ -232,6 +252,16 @@ angular.module('awesome.services.events5', [])
 
 				// Return the listenerName, so it can be stored by the calling function
 				return listenerName;
+
+			};
+
+
+
+			// Add selfDestroying eventListener
+			thisService.addSelfDestroyingEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
+
+				// Pass through
+				return thisService.addEventListener(listenerName, eventNameOrEventNamesObject, listener, checkMemory, true);
 
 			};
 
@@ -317,6 +347,12 @@ angular.module('awesome.services.events5', [])
 						// Apply the listener
 						singleListener.listener.apply(null, eventArguments);
 
+						// If this is a selfDestroying eventListener
+						if (singleListener.selfDestroying)
+
+							// Remove the eventListener
+							thisService.removeEventListener(singleListener.listenerName);
+
 					});
 
 					// Loop over the multiListeners
@@ -336,6 +372,12 @@ angular.module('awesome.services.events5', [])
 
 							// Call the listener
 							multiListener.listener();
+
+							// If this is a selfDestroying eventListener
+							if (multiListener.selfDestroying)
+
+								// Remove the eventListener
+								thisService.removeEventListener(multiListener.listenerName);
 
 						}
 
