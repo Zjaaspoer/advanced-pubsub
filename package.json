@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"express": "latest",
+		"jade": "latest",
+		"grunt": "latest",
+		"grunt-contrib-watch": "latest"
+	}
+}
