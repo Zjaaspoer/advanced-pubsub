@@ -2,6 +2,10 @@
 
 // TODO: Create a selfDestroying eventListener, that will only listen once and then destoy itself
 
+// TODO: Build a ie8 version, with the non ie8 compatible code replaced
+
+// TODO: Guarantee that listeners will be fired in the order that they have been added?
+
 angular.module('awesome.services.events', [])
 	.provider('events', function() {
 
@@ -9,7 +13,7 @@ angular.module('awesome.services.events', [])
 
 		// Init the default configuration
 		var config = {
-			check: false,
+			checks: false,
 			verbose: false
 		};
 
@@ -33,8 +37,10 @@ angular.module('awesome.services.events', [])
 			// Init variables
 			var
 				// TODO: Is this the right way to do this with a provider?
+				// TODO: Rename self to better name
 				self = {},
 				eventsMemory = {},
+				eventMemoryObjects = {},
 				eventRefs = {},
 				consoleColors = {
 					'addEventListener (single) add':	'color:rgb(255,  0,  0)',
@@ -47,10 +53,7 @@ angular.module('awesome.services.events', [])
 					'memory: clear':					'color:rgb(  0,128,128)',
 					'listeners: clear':					'color:rgb(128,128,  0)',
 					'listener: clear':					'color:rgb(128,  0,128)'
-				},
-				// Set shorthands for the config parameters
-				verbose = config.verbose,
-				check = config.check;
+				};
 
 
 
@@ -59,48 +62,55 @@ angular.module('awesome.services.events', [])
 			self.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, argumentsEvent) {
 
 				// If listenerName is not a non empty string
-				if (check && typeof listenerName !== 'string' || listenerName === '')
+				if (config.checks && typeof listenerName !== 'string' || listenerName === '')
 
 					// Throw error
 					throw new Error('listenerName should be a non empty string');
 
 				// If eventNameOrEventNamesObject is not a non empty string or a non empty array (perf1)
-				if (check && !(typeof eventNameOrEventNamesObject === 'string' && eventNameOrEventNamesObject !== '') && !(Array.isArray(eventNameOrEventNamesObject) && eventNameOrEventNamesObject.length > 0))
+				if (config.checks && !(typeof eventNameOrEventNamesObject === 'string' && eventNameOrEventNamesObject !== '') && !(Array.isArray(eventNameOrEventNamesObject) && eventNameOrEventNamesObject.length > 0))
 
 					// Throw error
 					throw new Error('eventNameOrEventNamesObject should be a non empty string or a non empty array');
 
 				// If eventNameOrEvenNamesObject is not a non empty string (perf2)
-				if (check && typeof listener !== 'function')
+				if (config.checks && typeof listener !== 'function')
 
 					// Throw error
 					throw new Error('listener should be a function');
 
 				// If checkMemory is not undefined or a Boolean
-				if (check && typeof checkMemory !== 'undefined' && typeof checkMemory !== 'boolean')
+				if (config.checks && typeof checkMemory !== 'undefined' && typeof checkMemory !== 'boolean')
 
 					// Throw error
 					throw new Error('(Optional) checkMemory should be a boolean');
 
-				// TODO: Create argumentsEvent check
+				//
+				if (config.checks)
+					// Loop through all of the events
+					for (var iKey = 0, eventNames = Object.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++) {
+						// Loop through all the singleListeners
+						for (var iListener = 0, listenersLength = eventRefs[eventNames[iKey]].singleListeners.length; iListener < listenersLength; iListener++)
+							// If this listener is not nulled (because of the clearEventListener method) & If the listenerName is the same
+							if (eventRefs[eventNames[iKey]].singleListeners[iListener] && eventRefs[eventNames[iKey]].singleListeners[iListener].listenerName === listenerName)
+								// Throw an error
+								throw new Error('Single event \'' + listenerName + '\' is already registered');
+						// Loop through all the multiListeners
+						for (var jListener = 0, listenersLengthJ = eventRefs[eventNames[iKey]].multiListeners.length; jListener < listenersLengthJ; jListener++)
+							// If this listener is not nulled (because of the clearEventListener method) & If the listenerName is the same
+							if (eventRefs[eventNames[iKey]].multiListeners[jListener] && eventRefs[eventNames[iKey]].multiListeners[jListener].listenerName === listenerName)
+							// Throw an error
+								throw new Error('Multi event \'' + listenerName + '\' is already registered');
+					}
+
+
+				// TODO: Create argumentsEvent checks
 
 				// If this is a single event
 				if (typeof eventNameOrEventNamesObject === 'string') {
 
 					// Verbose
-					if (verbose) console.log('%caddEventListener (single) add:\t\t%s', consoleColors['addEventListener (single) add'], listenerName);
-
-					// If check is enabled and this event has an eventRef, check that this listener does not exist yet
-					if (check) {
-						// Loop through all of the events
-						for (var iKey = 0, eventNames = Object.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++)
-							// Loop through all the singleListeners
-							for (var iListener = 0, listenersLength = eventRefs[eventNames[iKey]].singleListeners.length; iListener < listenersLength; iListener++)
-								// If this listener is not nulled (because of the clearEventListener method) & If the listenerName is the same
-								if (eventRefs[eventNames[iKey]].singleListeners[iListener] && eventRefs[eventNames[iKey]].singleListeners[iListener].listenerName === listenerName)
-									// Throw an error
-									throw new Error('Single event \'' + listenerName + '\' is already registered');
-					}
+					if (config.verbose) console.log('%caddEventListener (single) add:\t\t%s', consoleColors['addEventListener (single) add'], listenerName);
 
 					// If there is no eventRef object yet, create it
 					if (!eventRefs[eventNameOrEventNamesObject])
@@ -120,7 +130,7 @@ angular.module('awesome.services.events', [])
 					if (checkMemory && eventsMemory[eventNameOrEventNamesObject]) {
 
 						// Verbose
-						if (verbose) console.log('%cfireMemory (single):\t\t\t\t%s', consoleColors['fireMemory (single)'], listenerName);
+						if (config.verbose) console.log('%cfireMemory (single):\t\t\t\t%s', consoleColors['fireMemory (single)'], listenerName);
 
 						// Fire the listener with the arguments provided
 						listener.apply(null, eventsMemory[eventNameOrEventNamesObject]);
@@ -135,11 +145,11 @@ angular.module('awesome.services.events', [])
 				else if (Object.prototype.toString.call(eventNameOrEventNamesObject) === '[object Array]') {
 
 					// Verbose
-					if (verbose) console.log('%caddEventListener (multiple) add:\t%s', consoleColors['addEventListener (multiple) add'], listenerName);
+					if (config.verbose) console.log('%caddEventListener (multiple) add:\t%s', consoleColors['addEventListener (multiple) add'], listenerName);
 
 					// Check that this listener does not exist yet
-					// TODO: Create the check again
-					/*if (check)
+					// TODO: Create the checks again
+					/*if (config.checks)
 						throw new Error('Multi event \'' + listenerName + '\' is already registered');*/
 
 					// Add the listener to the listeners object
@@ -155,8 +165,8 @@ angular.module('awesome.services.events', [])
 					// Loop over every seperate event
 					for (var iEvent = 0, eventsLength = newListenerObject.eventNamesFlat.length; iEvent < eventsLength; iEvent++) {
 
-						// If check is enabled and this event has an eventRef, check that this listener does not exist yet
-						if (check && eventRefs[newListenerObject.eventNamesFlat[iEvent]]) {
+						// If checks is enabled and this event has an eventRef, check that this listener does not exist yet
+						if (config.checks && eventRefs[newListenerObject.eventNamesFlat[iEvent]]) {
 							// Loop through all the multiListeners
 							for (var jListener = 0, listenersLengthJ = eventRefs[newListenerObject.eventNamesFlat[iEvent]].multiListeners.length; jListener < listenersLengthJ; jListener++)
 								// If this listener is not nulled (because of the clearEventListener method) & If the listenerName is the same
@@ -194,7 +204,7 @@ angular.module('awesome.services.events', [])
 						if (parseEventNamesObject(newListenerObject.eventNamesObject, newListenerObject.memory)) {
 
 							// Verbose
-							if (verbose) console.log('%cfireMemory (multi):\t\t\t%s', consoleColors['fireMemory (multi)'], listenerName);
+							if (config.verbose) console.log('%cfireMemory (multi):\t\t\t%s', consoleColors['fireMemory (multi)'], listenerName);
 
 							// If there is an argumentsEvent, call the listener with those arguments
 							if (argumentsEvent && eventsMemory[argumentsEvent])
@@ -217,18 +227,30 @@ angular.module('awesome.services.events', [])
 
 
 
+			// Clear all (mainly for testing purposes)
+			self.clearAll = function() {
+
+				// Clear all arrays
+				eventsMemory = {};
+				eventMemoryObjects = {};
+				eventRefs = {};
+
+			};
+
+
+
 			// Dispatch an event
 			//noinspection FunctionWithMultipleLoopsJS
 			self.dispatchEvent = function(eventName) {
 
 				// If eventName is not a non empty string
-				if (check && typeof eventName !== 'string' || eventName === '')
+				if (config.checks && typeof eventName !== 'string' || eventName === '')
 
 					// Throw error
 					throw new Error('eventName should be a non empty string');
 
 				// Verbose
-				if (verbose) { //noinspection JSHint
+				if (config.verbose) { //noinspection JSHint
 					console.log('%cdispatchEvent:\t\t\t\t\t\t%s', consoleColors.dispatchEvent, eventName);
 				}
 
@@ -245,7 +267,7 @@ angular.module('awesome.services.events', [])
 						if (eventRefs[eventName].singleListeners[i]) {
 
 							// Verbose
-							if (verbose) console.log('%ccallListener (single):\t\t\t\t%s\t%s', consoleColors['callListener (single)'], eventName, eventRefs[eventName].singleListeners[i].listenerName);
+							if (config.verbose) console.log('%ccallListener (single):\t\t\t\t%s\t%s', consoleColors['callListener (single)'], eventName, eventRefs[eventName].singleListeners[i].listenerName);
 
 							eventRefs[eventName].singleListeners[i].listener.apply(null, arguments);
 
@@ -264,7 +286,7 @@ angular.module('awesome.services.events', [])
 						if (eventRefs[eventName].multiListeners[j] && parseEventNamesObject(eventRefs[eventName].multiListeners[j].eventNamesObject, eventRefs[eventName].multiListeners[j].memory)) {
 
 							// Verbose
-							if (verbose) console.log('%ccallListener (multi):\t\t\t\t%s (%s)', consoleColors['callListener (multi)'], eventName, eventRefs[eventName].multiListeners[j].listenerName);
+							if (config.verbose) console.log('%ccallListener (multi):\t\t\t\t%s (%s)', consoleColors['callListener (multi)'], eventName, eventRefs[eventName].multiListeners[j].listenerName);
 
 							// If there is an argumentsEvent, call the listener with those arguments
 							if (eventRefs[eventName].multiListeners[j].argumentsEvent && eventsMemory[eventRefs[eventName].multiListeners[j].argumentsEvent])
@@ -289,13 +311,13 @@ angular.module('awesome.services.events', [])
 			self.clearEventFromMemory = function(eventName) {
 
 				// If eventName is not a non empty string
-				if (check && typeof eventName !== 'string' || eventName === '')
+				if (config.checks && typeof eventName !== 'string' || eventName === '')
 
 					// Throw error
 					throw new Error('eventName should be a non empty string');
 
 				// Verbose
-				if (verbose) console.log('%cmemory: clear\t\t\t\t\t\t%s', consoleColors['memory: clear'], eventName);
+				if (config.verbose) console.log('%cmemory: clear\t\t\t\t\t\t%s', consoleColors['memory: clear'], eventName);
 
 				// Clear the arguments memory
 				if (eventsMemory[eventName])
@@ -323,16 +345,16 @@ angular.module('awesome.services.events', [])
 			self.removeEventListener = function removeEventListener(listenerName) {
 
 				// If listenerName is not a non empty string
-				if (check && typeof listenerName !== 'string' || listenerName === '')
+				if (config.checks && typeof listenerName !== 'string' || listenerName === '')
 
-					// Throw error
+				// Throw error
 					throw new Error('listenerName should be a non empty string');
 
 				// TODO: Perf question: Is it better to splice or to null, looking at looping performance of the array later on
 				// TODO: This loop can be done via a lookup per listenerName too
 
 				// Verbose
-				if (verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
+				if (config.verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
 
 				// Loop through all the eventRefs
 				for (var iKey = 0, eventNames = Object.keys(eventRefs), lengthEventNames = eventNames.length; iKey < lengthEventNames; iKey++) {
@@ -361,13 +383,13 @@ angular.module('awesome.services.events', [])
 			self.removeEventListeners = function(listenerNames) {
 
 				// If listenerNames is not an array (perf1)
-				if (check && !Array.isArray(listenerNames))
+				if (config.checks && !Array.isArray(listenerNames))
 
 					// Throw error
 					throw new Error('listenerNames should be an array');
 
 				// Verbose
-				if (verbose) console.log('%clisteners: clear\t\t\t%s', consoleColors['listeners: clear'], listenerNames);
+				if (config.verbose) console.log('%clisteners: clear\t\t\t%s', consoleColors['listeners: clear'], listenerNames);
 
 				// Loop through the array of listener names
 				for (var i = 0, listenerNamesLength = listenerNames.length; i < listenerNamesLength; i++)
@@ -377,19 +399,31 @@ angular.module('awesome.services.events', [])
 
 
 
-			// Update config
+			// Update config (mainly for testing purposes)
 			self.updateConfig = function(newConfig) {
 
-				// If the check key is a boolean
-				if(typeof newConfig.check === 'boolean')
+				// If the checks key is a boolean
+				if (typeof newConfig.checks === 'boolean')
 
-					// Set the new check value
-					config.check = newConfig.check;
+					// Set the new checks value
+					config.checks = newConfig.checks;
 
-				// If the check key is a boolean
-				if(typeof newConfig.verbose === 'boolean')
+				// If the passThroughArguments key is a boolean
+				if (typeof newConfig.passThroughArguments === 'boolean')
 
-					// Set the new check value
+					// Set the new passThroughArguments value
+					config.passThroughArguments = newConfig.passThroughArguments;
+
+				// If the storeArguments key is a boolean
+				if (typeof newConfig.storeArguments === 'boolean')
+
+					// Set the new storeArguments value
+					config.storeArguments = newConfig.storeArguments;
+
+				// If the verbose key is a boolean
+				if (typeof newConfig.verbose === 'boolean')
+
+					// Set the new verbose value
 					config.verbose = newConfig.verbose;
 			};
 
@@ -400,7 +434,7 @@ angular.module('awesome.services.events', [])
 			function parseEventNamesObject(operatorsOriginal, memory) {
 
 				// First check the object if needed
-				if (check && false)
+				if (config.checks)
 					for (var i = 0, length = operatorsOriginal.length; i < length; i++) {
 
 						if (i % 2 === 0 && typeof operatorsOriginal[i] !== 'string' && Object.prototype.toString.call(operatorsOriginal[i]) !== '[object Array]' && typeof operatorsOriginal[i] !== 'boolean')
@@ -574,6 +608,7 @@ angular.module('awesome.services.events', [])
 				if (config.stateChangeStart) {
 
 					$rootScope = $injector.get('$rootScope');
+					// TODO: Do this with a more elegant call/apply method
 					$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 						self.dispatchEvent('native.$stateChangeStart', event, toState, toParams, fromState, fromParams);
 					});
