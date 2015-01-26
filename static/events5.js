@@ -1,11 +1,4 @@
 'use strict';
-
-// TODO: Create a selfDestroying eventListener, that will only listen once and then destoy itself
-
-// TODO: Build a ie8 version, with the non ie8 compatible code replaced
-
-// TODO: Guarantee that listeners will be fired in the order that they have been added?
-
 angular.module('awesome.services.events5', [])
 	.provider('events5', function() {
 
@@ -37,7 +30,6 @@ angular.module('awesome.services.events5', [])
 
 			// Init variables
 			var
-				// TODO: Is this the right way to do this with a provider?
 				thisService = {},
 				eventsMemory = [],
 				eventMemoryObjects = [],
@@ -200,8 +192,6 @@ angular.module('awesome.services.events5', [])
 
 						// Loop over the eventNamesFlat
 						each(newListenerObject.eventNamesFlat, function(eventName) {
-
-							// TODO: HERE WE SHOULD DESTINGUISH BETWEEN STORING ARGUMENTS AND NOT, BECAUSE IT WOULD MEAN AN OTHER MEMORY OBJECT
 
 							// If the arguments are being stored
 							if (config.storeArguments) {
@@ -790,7 +780,7 @@ angular.module('awesome.services.events5', [])
 						foundIndex = iArray;
 
 						// Stop this function
-						// TODO: THERE ARE PROBLEMS WITH THIS OPTIMIZATION BECAUSE OF THE SCOPE CHANGE
+						// NOTE: We need to return foundIndex, because after optimization there is no 'each' function anymore so with a return the complete indexOf function is returned
 						return foundIndex;
 
 					}
@@ -806,11 +796,6 @@ angular.module('awesome.services.events5', [])
 
 			// Remove an element from an array
 			function removeArrayElement(array, index) {
-
-				// TODO: Perf question: Is it better to splice or to null, looking at looping performance of the array later on
-
-				// Splice
-				//array.splice(index, 1);
 
 				// Null
 				array[index] = null;
