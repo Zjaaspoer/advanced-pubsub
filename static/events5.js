@@ -587,6 +587,159 @@ angular.module('awesome.services.events5', [])
 
 
 
+			// addListener helper function
+			function addListener(singleOrMulti, eventName, listener) {
+
+				// Find the eventRef
+				var eventRef = findByKey(eventRefs, 'eventName', eventName);
+
+				// If there is no eventRef object yet
+				if (!eventRef) {
+
+					// Create it
+					eventRef = {
+						eventName: eventName,
+						singleListeners: [],
+						multiListeners: []
+					};
+
+					// Push the eventRef object in the eventRefs array
+					eventRefs.push(eventRef);
+
+				}
+
+				// Add the new listener to the eventRef object
+				eventRef[singleOrMulti + 'Listeners'].push(listener);
+
+			}
+
+
+
+			// Performant each function
+			function each(array, fn) {
+
+				// Loop over the array (cached length)
+				for (var i = 0, length = array.length; i < length; i++)
+
+					// Make sure this value is not null
+					if (array[i] !== null)
+
+						// Execute the fn by passing the value
+						fn(array[i], i);
+
+			}
+
+
+
+			// Performant findByKey function
+			function findByKey(array, key, value) {
+
+				// Get the index
+				var index = indexByKey(array, key, value);
+
+				// If index is -1 (so the element is not found)
+				if (index === -1)
+
+					// Return null
+					return null;
+
+				// Else return the element
+				return array[index];
+
+			}
+
+
+
+			// Flatten an eventNamesObject
+			function flattenEventNamesObject(operatorsOriginal, eventNamesFlat) {
+
+				// Create the flat array
+				eventNamesFlat = eventNamesFlat || [];
+
+				// Loop over the operatorsOriginal
+				each(operatorsOriginal, function(operatorOriginal, i) {
+
+					// Only do this fo the even elements (the eventNames / subArrays and not the operators)
+					if (i % 2 === 0) {
+
+						// If the operator is a string
+						if (typeof operatorOriginal === 'string') {
+
+							// And the value is not already in the array
+							// PERFORMANCE [1] array.push()
+							if (indexOf(eventNamesFlat, operatorOriginal) === -1)
+
+								// Push it in
+								eventNamesFlat.push(operatorOriginal);
+
+						}
+
+						// Else assume it's an array
+						else
+
+							// Recurse over that array
+							flattenEventNamesObject(operatorOriginal, eventNamesFlat);
+
+					}
+
+				});
+
+				// Return the flat array
+				return eventNamesFlat;
+
+			}
+
+
+
+			// Performant indexByKey function
+			function indexByKey(array, key, value) {
+
+				// Loop over the array (cached length)
+				for (var i = 0, length = array.length; i < length; i++)
+
+					// If the object has the value at the key
+					if (array[i] !== null && array[i][key] === value)
+
+						// Return this object
+						return i;
+
+				// If the element is not found return -1
+				return -1;
+
+			}
+
+
+
+			// An efficient index of function
+			function indexOf(array, value) {
+
+				// Init the foundIndex
+				var foundIndex = -1;
+
+				// Loop over the array
+				each(array, function(element, iArray) {
+
+					// If the element is the value we're looking for
+					if (element === value) {
+
+						// Set the foundIndex
+						foundIndex = iArray;
+
+						// Stop this function
+						// NOTE: We need to return foundIndex, because after optimization there is no 'each' function anymore so with a return the complete indexOf function is returned
+						return foundIndex;
+
+					}
+
+				});
+
+				// Return the foundIndex
+				return foundIndex;
+
+			}
+
+
+
 			// Parse an event names object
 			function parseEventNamesObject(operatorsOriginal, eventsMemory) {
 
@@ -723,153 +876,6 @@ angular.module('awesome.services.events5', [])
 
 
 
-			// Flatten an eventNamesObject
-			function flattenEventNamesObject(operatorsOriginal, eventNamesFlat) {
-
-				// Create the flat array
-				eventNamesFlat = eventNamesFlat || [];
-
-				// Loop over the operatorsOriginal
-				each(operatorsOriginal, function(operatorOriginal, i) {
-
-					// Only do this fo the even elements (the eventNames / subArrays and not the operators)
-					if (i % 2 === 0) {
-
-						// If the operator is a string
-						if (typeof operatorOriginal === 'string') {
-
-							// And the value is not already in the array
-							// PERFORMANCE [1] array.push()
-							if (indexOf(eventNamesFlat, operatorOriginal) === -1)
-
-								// Push it in
-								eventNamesFlat.push(operatorOriginal);
-
-						}
-
-						// Else assume it's an array
-						else
-
-							// Recurse over that array
-							flattenEventNamesObject(operatorOriginal, eventNamesFlat);
-
-					}
-
-				});
-
-				// Return the flat array
-				return eventNamesFlat;
-
-			}
-
-
-
-			function each(array, fn) {
-
-				// Loop over the array (cached length)
-				for (var i = 0, length = array.length; i < length; i++)
-
-					// Make sure this value is not null
-					if (array[i] !== null)
-
-						// Execute the fn by passing the value
-						fn(array[i], i);
-
-			}
-
-
-
-			function indexByKey(array, key, value) {
-
-				// Loop over the array (cached length)
-				for (var i = 0, length = array.length; i < length; i++)
-
-					// If the object has the value at the key
-					if (array[i] !== null && array[i][key] === value)
-
-						// Return this object
-						return i;
-
-				// If the element is not found return -1
-				return -1;
-
-			}
-
-
-			function findByKey(array, key, value) {
-
-				// Get the index
-				var index = indexByKey(array, key, value);
-
-				// If index is -1 (so the element is not found)
-				if (index === -1)
-
-					// Return null
-					return null;
-
-				// Else return the element
-				return array[index];
-
-			}
-
-
-			function addListener(singleOrMulti, eventName, listener) {
-
-				// Find the eventRef
-				var eventRef = findByKey(eventRefs, 'eventName', eventName);
-
-				// If there is no eventRef object yet
-				if (!eventRef) {
-
-					// Create it
-					eventRef = {
-						eventName: eventName,
-						singleListeners: [],
-						multiListeners: []
-					};
-
-					// Push the eventRef object in the eventRefs array
-					eventRefs.push(eventRef);
-
-				}
-
-				// Add the new listener to the eventRef object
-				eventRef[singleOrMulti + 'Listeners'].push(listener);
-
-			}
-
-
-
-			// An efficient index of function
-			function indexOf(array, value) {
-
-				// Init the foundIndex
-				var foundIndex = -1;
-
-				// Loop over the array
-				each(array, function(element, iArray) {
-
-					// If the element is the value we're looking for
-					if (element === value) {
-
-						// Set the foundIndex
-						foundIndex = iArray;
-
-						// Stop this function
-						// NOTE: We need to return foundIndex, because after optimization there is no 'each' function anymore so with a return the complete indexOf function is returned
-						return foundIndex;
-
-					}
-
-				});
-
-				// Return the foundIndex
-				return foundIndex;
-
-			}
-
-
-
 			// Remove an element from an array
 			function removeArrayElement(array, index) {
 
@@ -904,6 +910,7 @@ angular.module('awesome.services.events5', [])
 
 							// Dispatch the native event
 							thisService.dispatchEvent(['native.' + nativeEvent].concat(arguments));
+
 						});
 
 					});
