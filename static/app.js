@@ -79,40 +79,29 @@ angular.module('events', [
 		};
 		var checks = [];
 		var storeArguments = [];
-		var passThroughArguments = [];
 		//checks.push(true);
 		checks.push(false);
 		storeArguments.push(true);
 		storeArguments.push(false);
-		passThroughArguments.push(true);
-		passThroughArguments.push(false);
 
 		// Create the tests
 		var tests = {};
 		_.each(eventsRefs, function(events, eventsName) {
 			_.each(checks, function(checks) {
 				_.each(storeArguments, function(storeArguments) {
-					_.each(passThroughArguments, function(passThroughArguments) {
 
-						// Cancel if this is events2 without storeArguments (as they are always stored)
-						if (eventsName.indexOf('events2') !== -1 && !storeArguments) return;
+					// Cancel if this is events2 without storeArguments (as they are always stored)
+					if (eventsName.indexOf('events2') !== -1 && !storeArguments) return;
 
-						// Cancel if this is events2 without passTroughArguments (as they are always passed through)
-						if (eventsName.indexOf('events2') !== -1 && !passThroughArguments) return;
+					// Cancel if this is events3 with storeArguments (as they are never stored)
+					if (eventsName.indexOf('events3') !== -1 && storeArguments) return;
 
-						// Cancel if this is events3 with storeArguments (as they are never stored)
-						if (eventsName.indexOf('events3') !== -1 && storeArguments) return;
+					tests[eventsName + '-' + (checks ? 'checks' : '') + '-' + (storeArguments ? 'storeArguments' : '')] = {
+						events: events,
+						checks: checks,
+						storeArguments: storeArguments
+					};
 
-						// Cancel if this is events3 with passTroughArguments (as they are never passed through)
-						if (eventsName.indexOf('events3') !== -1 && passThroughArguments) return;
-
-						tests[eventsName + '-' + (checks ? 'checks' : '') + '-' + (storeArguments ? 'storeArguments' : '') + '-' + (passThroughArguments ? 'passThroughArguments' : '')] = {
-							events: events,
-							checks: checks,
-							storeArguments: storeArguments,
-							passThroughArguments: passThroughArguments
-						};
-					});
 				});
 			});
 		});
@@ -131,8 +120,7 @@ angular.module('events', [
 
 				events.updateConfig({
 					checks: test.checks,
-					storeArguments: test.storeArguments,
-					passThroughArguments: test.passThroughArguments
+					storeArguments: test.storeArguments
 				});
 
 				var i = 0;
@@ -309,29 +297,20 @@ angular.module('events', [
 					}
 
 					// Arguments
-					if (test.passThroughArguments) {
-						if (test.checks) {
-							if (test.storeArguments) {
-								if (argumentsSingle	!== 2 * cycles.length) debugger; // batch 1: 0 & 6
-							} else if(!test.storeArguments) {
-								if (argumentsSingle	!== 1 * cycles.length) debugger; // batch 1: 0
-							} else { debugger; }
-							if (argumentsDouble		!== 3 * cycles.length) debugger;
-						} else if (!test.checks) {
-							if (test.storeArguments) {
-								if (argumentsSingle	!== 3 * cycles.length) debugger; // batch 1: 0 & 1(D) & 6
-							} else if(!test.storeArguments) {
-								if (argumentsSingle	!== 2 * cycles.length) debugger; // batch 1: 0 & 6
-							} else { debugger; }
-							if (argumentsDouble		!== 4 * cycles.length) debugger;
-						} else { debugger; }
-					} else if (!test.passThroughArguments) {
+					if (test.checks) {
 						if (test.storeArguments) {
-							if (argumentsSingle		!== 1 * cycles.length) debugger; // batch 1: 6
-						} else if (!test.storeArguments) {
-							if (argumentsSingle		!== 0 * cycles.length) debugger; // No fires
+							if (argumentsSingle	!== 3 * cycles.length) debugger; // batch 1: 0 & 6
+						} else if(!test.storeArguments) {
+							if (argumentsSingle	!== 2 * cycles.length) debugger; // batch 1: 0
 						} else { debugger; }
-						if (argumentsDouble			!== 0 * cycles.length) debugger;
+						if (argumentsDouble		!== 4 * cycles.length) debugger;
+					} else if (!test.checks) {
+						if (test.storeArguments) {
+							if (argumentsSingle	!== 4 * cycles.length) debugger; // batch 1: 0 & 1(D) & 6
+						} else if(!test.storeArguments) {
+							if (argumentsSingle	!== 3 * cycles.length) debugger; // batch 1: 0 & 6
+						} else { debugger; }
+						if (argumentsDouble		!== 5 * cycles.length) debugger;
 					} else { debugger; }
 
 
