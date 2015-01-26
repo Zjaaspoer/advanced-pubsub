@@ -346,9 +346,7 @@ angular.module('awesome.services.events5', [])
 
 			// Clear an event from eventsMemory
 			//noinspection FunctionWithMultipleLoopsJS
-			thisService.clearEventFromMemory = function(eventName) {
-
-				// TODO: Also do a check to make sure this eventName exits!
+			thisService.clearEventFromMemory = function(eventName, disableCheck) {
 
 				// Checks
 				if (config.checks)
@@ -374,6 +372,12 @@ angular.module('awesome.services.events5', [])
 						// Remove the element
 						removeArrayElement(eventMemoryObjects, eventMemoryObjectIndex);
 
+					// Checks: If the event doesn't exist
+					else if (config.checks && !disableCheck)
+
+						// Throw error
+						throw new Error('During clearEventFromMemory the eventName \'' + eventName + '\' could not be found');
+
 
 				}
 
@@ -388,6 +392,12 @@ angular.module('awesome.services.events5', [])
 
 						// Remove the element
 						removeArrayElement(eventsMemory, eventMemoryIndex);
+
+					// Checks: If the event doesn't exist
+					else if (config.checks && !disableCheck)
+
+						// Throw error
+						throw new Error('During clearEventFromMemory the eventName \'' + eventName + '\' could not be found');
 
 				}
 
@@ -417,9 +427,7 @@ angular.module('awesome.services.events5', [])
 
 			// Remove a specific event listener
 			//noinspection FunctionWithMultipleLoopsJS
-			thisService.removeEventListener = function removeEventListener(listenerName) {
-
-				// TODO: Also do a check to make sure this listenerName exits!
+			thisService.removeEventListener = function removeEventListener(listenerName, disableCheck) {
 
 				// Checks
 				if (config.checks)
@@ -435,6 +443,9 @@ angular.module('awesome.services.events5', [])
 				// Verbose
 				if (config.verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
 
+				// Init the flag listenerFound
+				var listenerFound = false;
+
 				// Loop over the eventRefs
 				each(eventRefs, function(eventRef) {
 
@@ -442,10 +453,15 @@ angular.module('awesome.services.events5', [])
 					each(eventRef.singleListeners, function(singleListener, iSingleListener) {
 
 						// If the listenerName matches
-						if (singleListener.listenerName === listenerName)
+						if (singleListener.listenerName === listenerName) {
 
 							// Remove the array element
 							removeArrayElement(eventRef.singleListeners, iSingleListener);
+
+							// Set the listenerFound flag to true
+							listenerFound = true;
+
+						}
 
 					});
 
@@ -453,15 +469,28 @@ angular.module('awesome.services.events5', [])
 					each(eventRef.multiListeners, function(multiListener, iMultiListener) {
 
 						// If the listenerName matches
-						if (multiListener.listenerName === listenerName)
+						if (multiListener.listenerName === listenerName) {
 
 							// Remove the array element
 							removeArrayElement(eventRef.multiListeners, iMultiListener);
 
+							// Set the listenerFound flag to true
+							listenerFound = true;
+
+						}
 
 					});
 
 				});
+
+				// Checks
+				if (config.checks && !disableCheck)
+
+					// If no listener is found
+					if (!listenerFound)
+
+						// Throw error
+						throw new Error('During removeEventListener the listenerName \'' + listenerName + '\' could not be found');
 
 			};
 
