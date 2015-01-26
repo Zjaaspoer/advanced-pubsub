@@ -188,7 +188,7 @@ angular.module('awesome.services.events5', [])
 						eventNamesObject: eventNamesObject,
 						eventNamesFlat: flattenEventNamesObject(eventNamesObject),
 						listener: listener,
-						eventsMemory: [],
+						listenerEventsMemory: [],
 						selfDestroying: !!selfDestroying
 					};
 
@@ -212,8 +212,8 @@ angular.module('awesome.services.events5', [])
 								// If an eventMemoryObject is found
 								if (findByKey(eventMemoryObjects, 'eventName', eventName))
 
-									// Add it to the eventsMemory of the listener object
-									newListenerObject.eventsMemory.push(eventName);
+									// Add it to the listenerEventsMemory of the listener object
+									newListenerObject.listenerEventsMemory.push(eventName);
 
 							}
 
@@ -223,13 +223,13 @@ angular.module('awesome.services.events5', [])
 								// If an eventMemory is found
 								if (indexOf(eventsMemory, eventName) !== -1)
 
-									// Add it to the eventsMemory of the listener object
-									newListenerObject.eventsMemory.push(eventName);
+									// Add it to the listenerEventsMemory of the listener object
+									newListenerObject.listenerEventsMemory.push(eventName);
 
 						});
 
 						// If the eventNamesObject parses into true
-						if (parseEventNamesObject(newListenerObject.eventNamesObject, newListenerObject.eventsMemory)) {
+						if (parseEventNamesObject(newListenerObject.eventNamesObject, newListenerObject.listenerEventsMemory)) {
 
 							// Verbose
 							if (config.verbose) console.log('%cfireMemory (multi):\t\t\t%s', consoleColors['fireMemory (multi)'], listenerName);
@@ -356,14 +356,14 @@ angular.module('awesome.services.events5', [])
 					// Loop over the multiListeners
 					each(eventRef.multiListeners, function(multiListener) {
 
-						// If the eventName does not exist in the eventsMemory yet
-						if (indexOf(multiListener.eventsMemory, eventName) === -1)
+						// If the eventName does not exist in the listenerEventsMemory yet
+						if (indexOf(multiListener.listenerEventsMemory, eventName) === -1)
 
-							// Push the new eventName into the multiListeners eventsMemory
-							multiListener.eventsMemory.push(eventName);
+							// Push the new eventName into the multiListeners listenerEventsMemory
+							multiListener.listenerEventsMemory.push(eventName);
 
 						// Checks if this listener needs to fire
-						if (parseEventNamesObject(multiListener.eventNamesObject, multiListener.eventsMemory)) {
+						if (parseEventNamesObject(multiListener.eventNamesObject, multiListener.listenerEventsMemory)) {
 
 							// Verbose
 							if (config.verbose) console.log('%ccallListener (multi):\t\t\t\t%s (%s)', consoleColors['callListener (multi)'], eventName, multiListener.listenerName);
@@ -452,14 +452,14 @@ angular.module('awesome.services.events5', [])
 					// Loop over the multiListeners
 					each(eventRef.multiListeners, function(multiListener) {
 
-						// Get the index of the eventName in the eventsMemory array
-						var eventMemoryIndex = indexOf(multiListener.eventsMemory, eventName);
+						// Get the index of the eventName in the listenerEventsMemory array
+						var listenerEventMemoryIndex = indexOf(multiListener.listenerEventsMemory, eventName);
 
 						// If the eventName is found
-						if (eventMemoryIndex !== -1)
+						if (listenerEventMemoryIndex !== -1)
 
 							// Remove the element
-							removeArrayElement(multiListener.eventsMemory, eventMemoryIndex);
+							removeArrayElement(multiListener.listenerEventsMemory, listenerEventMemoryIndex);
 
 					});
 
@@ -741,7 +741,7 @@ angular.module('awesome.services.events5', [])
 
 
 			// Parse an event names object
-			function parseEventNamesObject(operatorsOriginal, eventsMemory) {
+			function parseEventNamesObject(operatorsOriginal, listenerEventsMemory) {
 
 				// Checks
 				if (config.checks)
@@ -775,7 +775,7 @@ angular.module('awesome.services.events5', [])
 						if (typeof operatorOriginal === 'string')
 
 							// Parse the value
-							eventNamesObject[i] = indexOf(eventsMemory, operatorOriginal) !== -1;
+							eventNamesObject[i] = indexOf(listenerEventsMemory, operatorOriginal) !== -1;
 
 						// Else if this is not a string (and therefore an array)
 						else
@@ -843,7 +843,7 @@ angular.module('awesome.services.events5', [])
 					if (Object.prototype.toString.call(eventNameObject) === '[object Array]')
 
 						// Recursive parse
-						eventNamesObject[i] = parseEventNamesObject(eventNameObject, eventsMemory);
+						eventNamesObject[i] = parseEventNamesObject(eventNameObject, listenerEventsMemory);
 
 				});
 
