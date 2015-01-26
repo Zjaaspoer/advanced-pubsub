@@ -50,7 +50,6 @@ angular.module('awesome.services.events5', [])
 
 
 			// Add event listener
-			//noinspection FunctionWithMultipleLoopsJS
 			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, selfDestroying) {
 
 				// Checks
@@ -280,7 +279,6 @@ angular.module('awesome.services.events5', [])
 
 
 			// Dispatch an event
-			//noinspection FunctionWithMultipleLoopsJS
 			thisService.dispatchEvent = function(eventName) {
 
 				// Check
@@ -390,7 +388,6 @@ angular.module('awesome.services.events5', [])
 
 
 			// Clear an event from eventsMemory
-			//noinspection FunctionWithMultipleLoopsJS
 			thisService.clearEventFromMemory = function(eventName, disableCheck) {
 
 				// Checks
@@ -471,7 +468,6 @@ angular.module('awesome.services.events5', [])
 
 
 			// Remove a specific event listener
-			//noinspection FunctionWithMultipleLoopsJS
 			thisService.removeEventListener = function removeEventListener(listenerName, disableCheck) {
 
 				// Checks
@@ -592,7 +588,6 @@ angular.module('awesome.services.events5', [])
 
 
 			// Parse an event names object
-			//noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMultipleLoopsJS
 			function parseEventNamesObject(operatorsOriginal, eventsMemory) {
 
 				// Checks
