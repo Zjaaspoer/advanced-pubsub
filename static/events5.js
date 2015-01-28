@@ -31,6 +31,7 @@ angular.module('awesome.services.events5', [])
 			// Init variables
 			var
 				thisService = {},
+				listenerNameI = 0,
 				eventsMemory = [],
 				eventMemoryObjects = [],
 				eventRefs = [],
@@ -51,6 +52,26 @@ angular.module('awesome.services.events5', [])
 
 			// Add event listener
 			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, selfDestroying) {
+
+				// If eventNameOrEventNamesObject is a function, assume listenerName is omitted
+				if (typeof eventNameOrEventNamesObject === 'function') {
+
+					// Get the selfDestroying
+					selfDestroying = checkMemory;
+
+					// Get the checkMemory
+					checkMemory = listener;
+
+					// Get the listener
+					listener = eventNameOrEventNamesObject;
+
+					// Get the eventNameOrEventNamesObject
+					eventNameOrEventNamesObject = listenerName;
+
+					// Generate a anonymous listenerName
+					listenerName = 'anonymousListener' + listenerNameI++;
+
+				}
 
 				// Checks
 				if (config.checks) {

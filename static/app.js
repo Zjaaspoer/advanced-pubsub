@@ -193,8 +193,8 @@ angular.module('events', [
 
 
 
-					// Double OR event
-					events.addEventListener(i + '_testListener2', [
+					// Double OR event (without a name)
+					events.addEventListener([
 						i + '_testEvent1', '||',
 						i + '_testEvent2'
 					], testListener2);
@@ -272,7 +272,7 @@ angular.module('events', [
 					cycles.forEach(function(cycle) {
 						events.removeEventListener(cycle + '_testListener0');
 						events.removeEventListener(cycle + '_testListener1');
-						events.removeEventListener(cycle + '_testListener2');
+						events.removeEventListener('anonymousListener0');
 						events.removeEventListener(cycle + '_testListener3');
 						events.removeEventListener(cycle + '_testListener4');
 						events.removeEventListener(cycle + '_testListener5');
