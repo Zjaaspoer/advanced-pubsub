@@ -21,48 +21,48 @@ while (arguments1.length < cycles.length)
 	arguments1.push(String(Math.random()));
 
 angular.module('aps', [
-	'awesome.services.events1',
-	'awesome.services.events2',
-	'awesome.services.events3',
-	'awesome.services.events4',
+	//'awesome.services.events1',
+	//'awesome.services.events2',
+	//'awesome.services.events3',
+	//'awesome.services.events4',
 	'advancedPubSub',
-	'awesome.services.events2Opt',
-	'awesome.services.events3Opt',
-	'awesome.services.events4Opt',
+	//'awesome.services.events2Opt',
+	//'awesome.services.events3Opt',
+	//'awesome.services.events4Opt',
 	'advancedPubSubOpt'
 ])
 	.config(function(
-		events1Provider,
-		events2Provider,
-		events3Provider,
-		events4Provider,
+		//events1Provider,
+		//events2Provider,
+		//events3Provider,
+		//events4Provider,
 		apsProvider,
-		events2OptProvider,
-		events3OptProvider,
-		events4OptProvider,
+		//events2OptProvider,
+		//events3OptProvider,
+		//events4OptProvider,
 		apsOptProvider
 	) {
 
-		events1Provider.config(config);
-		events2Provider.config(config);
-		events3Provider.config(config);
-		events4Provider.config(config);
+		//events1Provider.config(config);
+		//events2Provider.config(config);
+		//events3Provider.config(config);
+		//events4Provider.config(config);
 		apsProvider.config(config);
-		events2OptProvider.config(config);
-		events3OptProvider.config(config);
-		events4OptProvider.config(config);
+		//events2OptProvider.config(config);
+		//events3OptProvider.config(config);
+		//events4OptProvider.config(config);
 		apsOptProvider.config(config);
 
 	})
 	.controller('AppController', function(
-		events1,
-		events2,
-		events3,
-		events4,
+		//events1,
+		//events2,
+		//events3,
+		//events4,
 		aps,
-		events2Opt,
-		events3Opt,
-		events4Opt,
+		//events2Opt,
+		//events3Opt,
+		//events4Opt,
 		apsOpt
 	) {
 
