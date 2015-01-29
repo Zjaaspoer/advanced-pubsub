@@ -9,9 +9,9 @@ var config = {
 
 // Create an array with n numbers for iteration
 var cycles = [];
-//while(cycles.length < 1) { // Too little
+while(cycles.length < 1) { // Too little
 //while (cycles.length < 25) { // Ok (disable console.time with this one as the hz is too high)
-while(cycles.length < 1000) { // Too much, but used to get a more fine grained result
+//while(cycles.length < 1000) { // Too much, but used to get a more fine grained result
 	cycles.push(cycles.length);
 }
 
@@ -71,18 +71,18 @@ angular.module('aps', [
 			//events2: events2,
 			//events3: events3,
 			//events4: events4,
-			events2Opt: events2Opt,
-			events3Opt: events3Opt,
-			events4Opt: events4Opt,
 			aps: aps,
+			//events2Opt: events2Opt,
+			//events3Opt: events3Opt,
+			//events4Opt: events4Opt,
 			apsOpt: apsOpt
 		};
 		var checks = [];
 		var storeArguments = [];
-		//checks.push(true);
-		checks.push(false);
+		checks.push(true);
+		//checks.push(false);
 		storeArguments.push(true);
-		storeArguments.push(false);
+		//storeArguments.push(false);
 
 		// Create the tests
 		var tests = {};
@@ -107,16 +107,16 @@ angular.module('aps', [
 		});
 
 
-		var suite = new Benchmark.Suite;
+		//var suite = new Benchmark.Suite;
 
 		_.each(tests, function(test, testName) {
 
 			var aps = test.aps;
 
-			suite.add(testName, function(deferred) {
+			//suite.add(testName, function(deferred) {
 
 				//console.log(testName);
-				//console.time(testName);
+				console.time(testName);
 
 				aps.updateConfig({
 					checks: test.checks,
@@ -144,13 +144,13 @@ angular.module('aps', [
 
 
 
-					function testListener0() { listener0FireCount++; if(config.verbose) console.log(i + '_testListener0'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener1() { listener1FireCount++; if(config.verbose) console.log(i + '_testListener1'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener2() { listener2FireCount++; if(config.verbose) console.log(i + '_testListener2'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener3() { listener3FireCount++; if(config.verbose) console.log(i + '_testListener3'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener4() { listener4FireCount++; if(config.verbose) console.log(i + '_testListener4'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener5() { listener5FireCount++; if(config.verbose) console.log(i + '_testListener5'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
-					function testListener6() { listener6FireCount++; if(config.verbose) console.log(i + '_testListener6'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; if (arguments.length > 1) debugger; }
+					function testListener0() { listener0FireCount++; if(config.verbose) console.log(i + '_testListener0'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener1() { listener1FireCount++; if(config.verbose) console.log(i + '_testListener1'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener2() { listener2FireCount++; if(config.verbose) console.log(i + '_testListener2'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener3() { listener3FireCount++; if(config.verbose) console.log(i + '_testListener3'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener4() { listener4FireCount++; if(config.verbose) console.log(i + '_testListener4'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener5() { listener5FireCount++; if(config.verbose) console.log(i + '_testListener5'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
+					function testListener6() { listener6FireCount++; if(config.verbose) console.log(i + '_testListener6'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
 					function testListener7() { listener7FireCount++; if(config.verbose) console.log(i + '_testListener7'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
 					function testListener8() { listener8FireCount++; if(config.verbose) console.log(i + '_testListener8'); if (arguments.length === 2) argumentsSingle++; else if (arguments.length === 3) argumentsDouble++; /*if (arguments.length > 1) debugger;*/ }
 
@@ -302,7 +302,7 @@ angular.module('aps', [
 						aps.removeEventFromMemory(cycle + '_testEvent3');
 					});
 
-					//console.timeEnd(testName);
+					console.timeEnd(testName);
 
 					// Test the counts
 
@@ -351,15 +351,15 @@ angular.module('aps', [
 
 					aps.removeAll();
 
-					deferred.resolve();
+					//deferred.resolve();
 
 				});
 
-			}, {defer: true});
+			//}, {defer: true});
 
 		});
 
-		suite
+		/*suite
 			.run({
 				async: true
 			})
@@ -372,6 +372,6 @@ angular.module('aps', [
 				_.each(this, function(completeBenchmark) {
 					console.log(completeBenchmark);
 				});
-			});
+			});*/
 
 	});
