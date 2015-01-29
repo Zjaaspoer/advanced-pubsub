@@ -137,6 +137,7 @@ angular.module('events', [
 					errorDoubleListener = 0,
 					argumentsSingle = 0,
 					argumentsDouble = 0,
+					removeFunctions = [];
 
 				// Create array
 				async.each(cycles, function(zero, cycleFinished) {
@@ -161,7 +162,7 @@ angular.module('events', [
 
 
 					// Simple event
-					events.addEventListener(i + '_testListener0', i + '_testEvent1', testListener0);
+					removeFunctions[i] = events.addEventListener(i + '_testListener0', i + '_testEvent1', testListener0);
 
 
 
@@ -286,7 +287,9 @@ angular.module('events', [
 
 					// Cleanup
 					cycles.forEach(function(cycle) {
-						events.removeEventListener(cycle + '_testListener0');
+						// Removing one eventListener via its return function
+						removeFunctions[cycle]();
+						// Remove the rest via its direct name
 						events.removeEventListener(cycle + '_testListener1');
 						events.removeEventListener('anonymousListener0');
 						events.removeEventListener(cycle + '_testListener3');

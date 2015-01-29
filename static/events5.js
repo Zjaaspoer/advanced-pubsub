@@ -307,8 +307,14 @@ angular.module('awesome.services.events5', [])
 
 				}
 
-				// Return the listenerName, so it can be stored by the calling function
-				return listenerName;
+
+				 // Return the function (named to be able to track it in profiling)
+				return function removeSpecificEventListener() {
+
+					// That removes the eventListener
+					thisService.removeEventListener(listenerName);
+
+				};
 
 			};
 
