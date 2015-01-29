@@ -53,8 +53,14 @@ angular.module('awesome.services.events5', [])
 			// Add event listener
 			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, selfDestroying) {
 
+				// Init the listenerNameProvided
+				var listenerNameProvided = true;
+
 				// If eventNameOrEventNamesObject is a function, assume listenerName is omitted
 				if (typeof eventNameOrEventNamesObject === 'function') {
+
+					// Set that listenerName is not provided
+					listenerNameProvided = false;
 
 					// Get the selfDestroying
 					selfDestroying = checkMemory;
@@ -103,17 +109,46 @@ angular.module('awesome.services.events5', [])
 					// Loop over the eventRefs
 					each(eventRefs, function(eventRef) {
 
-						// If a singleListener with the same listenerName can be found
-						if (findByKey(eventRef.singleListeners, 'listenerName', listenerName))
+						// If listenerNames are provided for both the new listener as the listener we are checking, you can compare by listenerName
+						if (listenerNameProvided && eventRef.listenerNameProvided) {
 
-							// Throw error
-							throw new Error('Listener \'' + listenerName + '\' is already registered');
+							// If a singleListener with the same listenerName can be found
+							if (findByKey(eventRef.singleListeners, 'listenerName', listenerName))
 
-						// If a multiListener with the same listenerName can be found
-						if (findByKey(eventRef.multiListeners, 'listenerName', listenerName))
+								// Throw error
+								throw new Error('Listener \'' + listenerName + '\' is already registered');
 
-							// Throw error
-							throw new Error('Listener \'' + listenerName + '\' is already registered');
+							// If a multiListener with the same listenerName can be found
+							if (findByKey(eventRef.multiListeners, 'listenerName', listenerName))
+
+								// Throw error
+								throw new Error('Listener \'' + listenerName + '\' is already registered');
+
+						}
+
+						// But always check the function profiles
+
+						// Loop over the singleListeners
+						each(eventRef.singleListeners, function(singleListener) {
+
+							// If the listeners are the same
+							if (singleListener.listener === listener)
+
+								// Throw error
+								throw new Error('This listenerFunction is already added');
+
+						});
+
+						// Loop over the singleListeners
+						each(eventRef.multiListeners, function(multiListener) {
+
+							// If the listeners are the same
+							if (multiListener.listener === listener)
+
+								// Throw error
+								throw new Error('This listenerFunction is already added');
+
+						});
 
 					});
 
@@ -134,7 +169,8 @@ angular.module('awesome.services.events5', [])
 					var newListenerObject = {
 						listenerName: listenerName,
 						listener: listener,
-						selfDestroying: !!selfDestroying
+						selfDestroying: !!selfDestroying,
+						listenerNameProvided: listenerNameProvided
 					};
 
 					// Add the listener
@@ -210,7 +246,8 @@ angular.module('awesome.services.events5', [])
 						eventNamesFlat: flattenEventNamesObject(eventNamesObject),
 						listener: listener,
 						listenerEventsMemory: [],
-						selfDestroying: !!selfDestroying
+						selfDestroying: !!selfDestroying,
+						listenerNameProvided: listenerNameProvided
 					};
 
 					// Loop over the eventNamesFlat

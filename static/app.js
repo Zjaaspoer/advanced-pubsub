@@ -133,9 +133,10 @@ angular.module('events', [
 					listener4FireCount = 0,
 					listener5FireCount = 0,
 					listener6FireCount = 0,
+					errorDoubleListenerName = 0,
 					errorDoubleListener = 0,
 					argumentsSingle = 0,
-					argumentsDouble = 0;
+					argumentsDouble = 0,
 
 				// Create array
 				async.each(cycles, function(zero, cycleFinished) {
@@ -172,7 +173,7 @@ angular.module('events', [
 							i + '_testEvent2'
 						], testListener0);
 
-					} catch (err) { errorDoubleListener++; }
+					} catch (err) { errorDoubleListenerName++; }
 
 
 
@@ -189,7 +190,7 @@ angular.module('events', [
 
 						events.addEventListener(i + '_testListener1', i + '_testEvent1', testListener1);
 
-					} catch (err) { errorDoubleListener++; }
+					} catch (err) { errorDoubleListenerName++; }
 
 
 
@@ -209,6 +210,21 @@ angular.module('events', [
 							i + '_testEvent3'
 						]
 					], testListener3);
+
+
+
+					// Create an a double listener error
+					try {
+
+						events.addEventListener([
+							i + '_testEvent1', '&&',
+							[
+								i + '_testEvent2', '||',
+								i + '_testEvent3'
+							]
+						], testListener3);
+
+					} catch (err) { errorDoubleListener++; }
 
 
 
@@ -305,9 +321,11 @@ angular.module('events', [
 
 					// Error doubleListener
 					if (test.checks) {
-						if (errorDoubleListener		!== 2 * cycles.length) debugger; // There are two addListeners who would fire an error
+						if (errorDoubleListenerName		!== 2 * cycles.length) debugger;
+						if (errorDoubleListener			!== 1 * cycles.length) debugger;
 					} else {
-						if (errorDoubleListener		!== 0 * cycles.length) debugger; // If the checks are turned off the error will never fire
+						if (errorDoubleListenerName		!== 0 * cycles.length) debugger;
+						if (errorDoubleListener			!== 0 * cycles.length) debugger;
 					}
 
 					// Arguments
