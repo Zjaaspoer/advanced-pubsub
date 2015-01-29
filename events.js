@@ -1,6 +1,6 @@
 'use strict';
-angular.module('awesome.services.events5', [])
-	.provider('events5', function() {
+angular.module('awesome.services.events', [])
+	.provider('events', function() {
 
 
 

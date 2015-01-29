@@ -13,8 +13,11 @@ app.get('/', function (req, res) {
 });
 
 // event.js
-app.get('/events1.js', function (req, res) {
-	res.sendFile(__dirname + '/events1.js');
+app.get('/events.js', function (req, res) {
+	res.sendFile(__dirname + '/events.js');
+});
+app.get('/eventsOpt.js', function (req, res) {
+	res.sendFile(__dirname + '/eventsOpt.js');
 });
 
 app.listen(3000);
