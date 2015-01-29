@@ -133,6 +133,8 @@ angular.module('aps', [
 					listener4FireCount = 0,
 					listener5FireCount = 0,
 					listener6FireCount = 0,
+					listener7FireCount = 0,
+					listener8FireCount = 0,
 					errorDoubleListenerName = 0,
 					errorDoubleListener = 0,
 					argumentsSingle = 0,
