@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 			2: {options: {name: 'events2'}},
 			3: {options: {name: 'events3'}},
 			4: {options: {name: 'events4'}},
-			main: {options: {name: 'main'}}
+			aps: {options: {name: 'aps'}}
 		}
 	});
 
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 			// Regex string to mach the each() function start
 			regexString = /each\(([a-zA-Z\.]+), function\(([a-zA-Z]+)(, )*([a-zA-Z]+)*\) \{/g,
 			// Get the fileString
-			fileString = grunt.file.read(options.name === 'main' ? 'events.js' : 'static/' + options.name + '.js'),
+			fileString = grunt.file.read(options.name === 'aps' ? 'advancedPubSub.js' : 'static/' + options.name + '.js'),
 			// The iteration count
 			iIteration = 0,
 			// Track if a match is found
@@ -181,10 +181,24 @@ module.exports = function(grunt) {
 		fileString = fileString.replace(/\t+function each\(array, fn\) \{[\s\S]+?\}\n\n\n\n/, '');
 
 		// Temporary create a events#Opt service
-		fileString = fileString.replace(new RegExp(options.name === 'main' ? 'events' : options.name, 'g'), options.name === 'main' ? 'eventsOpt' : options.name + 'Opt');
+		// If this is the main aps file
+		if (options.name === 'aps') {
+
+			// Replace where appropriate
+			fileString = fileString.replace(new RegExp('advancedPubSub', 'g'), 'advancedPubSubOpt');
+			fileString = fileString.replace(new RegExp('aps', 'g'), 'apsOpt');
+
+		}
+
+		// If these are the old files
+		else
+
+			// Replace where appropriate
+			fileString = fileString.replace(new RegExp(options.name, 'g'), options.name + 'Opt');
+
 
 		// Write the file
-		grunt.file.write(options.name === 'main' ? 'eventsOpt.js' : 'static/' + options.name + 'Opt.js', fileString);
+		grunt.file.write(options.name === 'aps' ? 'advancedPubSubOpt.js' : 'static/' + options.name + 'Opt.js', fileString);
 
 	});
 

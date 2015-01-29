@@ -20,38 +20,38 @@ var arguments1 = [];
 while (arguments1.length < cycles.length)
 	arguments1.push(String(Math.random()));
 
-angular.module('events', [
+angular.module('aps', [
 	'awesome.services.events1',
 	'awesome.services.events2',
 	'awesome.services.events3',
 	'awesome.services.events4',
-	'awesome.services.events5',
+	'advancedPubSub',
 	'awesome.services.events2Opt',
 	'awesome.services.events3Opt',
 	'awesome.services.events4Opt',
-	'awesome.services.events5Opt'
+	'advancedPubSubOpt'
 ])
 	.config(function(
 		events1Provider,
 		events2Provider,
 		events3Provider,
 		events4Provider,
-		events5Provider,
+		apsProvider,
 		events2OptProvider,
 		events3OptProvider,
 		events4OptProvider,
-		events5OptProvider
+		apsOptProvider
 	) {
 
 		events1Provider.config(config);
 		events2Provider.config(config);
 		events3Provider.config(config);
 		events4Provider.config(config);
-		events5Provider.config(config);
+		apsProvider.config(config);
 		events2OptProvider.config(config);
 		events3OptProvider.config(config);
 		events4OptProvider.config(config);
-		events5OptProvider.config(config);
+		apsOptProvider.config(config);
 
 	})
 	.controller('AppController', function(
@@ -59,23 +59,23 @@ angular.module('events', [
 		events2,
 		events3,
 		events4,
-		events5,
+		aps,
 		events2Opt,
 		events3Opt,
 		events4Opt,
-		events5Opt
+		apsOpt
 	) {
 
-		var eventsRefs = {
+		var apsRefs = {
 			//events1: events1,
 			//events2: events2,
 			//events3: events3,
 			//events4: events4,
-			//events5: events5,
 			events2Opt: events2Opt,
 			events3Opt: events3Opt,
 			events4Opt: events4Opt,
-			events5Opt: events5Opt
+			aps: aps,
+			apsOpt: apsOpt
 		};
 		var checks = [];
 		var storeArguments = [];
@@ -86,18 +86,18 @@ angular.module('events', [
 
 		// Create the tests
 		var tests = {};
-		_.each(eventsRefs, function(events, eventsName) {
+		_.each(apsRefs, function(aps, apsName) {
 			_.each(checks, function(checks) {
 				_.each(storeArguments, function(storeArguments) {
 
 					// Cancel if this is events2 without storeArguments (as they are always stored)
-					if (eventsName.indexOf('events2') !== -1 && !storeArguments) return;
+					if (apsName.indexOf('events2') !== -1 && !storeArguments) return;
 
 					// Cancel if this is events3 with storeArguments (as they are never stored)
-					if (eventsName.indexOf('events3') !== -1 && storeArguments) return;
+					if (apsName.indexOf('events3') !== -1 && storeArguments) return;
 
-					tests[eventsName + '-' + (checks ? 'checks' : '') + '-' + (storeArguments ? 'storeArguments' : '')] = {
-						events: events,
+					tests[apsName + '-' + (checks ? 'checks' : '') + '-' + (storeArguments ? 'storeArguments' : '')] = {
+						aps: aps,
 						checks: checks,
 						storeArguments: storeArguments
 					};
@@ -111,14 +111,14 @@ angular.module('events', [
 
 		_.each(tests, function(test, testName) {
 
-			var events = test.events;
+			var aps = test.aps;
 
 			suite.add(testName, function(deferred) {
 
 				//console.log(testName);
 				//console.time(testName);
 
-				events.updateConfig({
+				aps.updateConfig({
 					checks: test.checks,
 					storeArguments: test.storeArguments
 				});
@@ -157,19 +157,19 @@ angular.module('events', [
 
 
 					// Single event without memory, destroying itself
-					events.addSingleFireEventListener(i + '_testListener8', i + '_testEvent1', testListener8);
+					aps.addSingleFireEventListener(i + '_testListener8', i + '_testEvent1', testListener8);
 
 
 
 					// Simple event
-					removeFunctions[i] = events.addEventListener(i + '_testListener0', i + '_testEvent1', testListener0);
+					removeFunctions[i] = aps.addEventListener(i + '_testListener0', i + '_testEvent1', testListener0);
 
 
 
 					// Create an a double listenerName error
 					try {
 
-						events.addEventListener(i + '_testListener0', [
+						aps.addEventListener(i + '_testListener0', [
 							i + '_testEvent1', '&&',
 							i + '_testEvent2'
 						], testListener0);
@@ -179,7 +179,7 @@ angular.module('events', [
 
 
 					// Double AND event
-					events.addEventListener(i + '_testListener1', [
+					aps.addEventListener(i + '_testListener1', [
 						i + '_testEvent1', '&&',
 						i + '_testEvent2'
 					], testListener1);
@@ -189,14 +189,14 @@ angular.module('events', [
 					// Create an a double listenerName error
 					try {
 
-						events.addEventListener(i + '_testListener1', i + '_testEvent1', testListener1);
+						aps.addEventListener(i + '_testListener1', i + '_testEvent1', testListener1);
 
 					} catch (err) { errorDoubleListenerName++; }
 
 
 
 					// Double OR event (without a name)
-					events.addEventListener([
+					aps.addEventListener([
 						i + '_testEvent1', '||',
 						i + '_testEvent2'
 					], testListener2);
@@ -204,7 +204,7 @@ angular.module('events', [
 
 
 					// Complex event
-					events.addEventListener(i + '_testListener3', [
+					aps.addEventListener(i + '_testListener3', [
 						i + '_testEvent1', '&&',
 						[
 							i + '_testEvent2', '||',
@@ -217,7 +217,7 @@ angular.module('events', [
 					// Create an a double listener error
 					try {
 
-						events.addEventListener([
+						aps.addEventListener([
 							i + '_testEvent1', '&&',
 							[
 								i + '_testEvent2', '||',
@@ -230,7 +230,7 @@ angular.module('events', [
 
 
 					// Complex event
-					events.addEventListener(i + '_testListener4', [
+					aps.addEventListener(i + '_testListener4', [
 						i + '_testEvent1', '&&',
 						[
 							i + '_testEvent2', '&&',
@@ -241,36 +241,36 @@ angular.module('events', [
 
 
 					// First batch of events
-					events.dispatchEvent(i + '_testEvent1', 'firstArgument' + arguments1[i]);
-					events.dispatchEvent(i + '_testEvent2');
-					events.dispatchEvent(i + '_testEvent3');
+					aps.dispatchEvent(i + '_testEvent1', 'firstArgument' + arguments1[i]);
+					aps.dispatchEvent(i + '_testEvent2');
+					aps.dispatchEvent(i + '_testEvent3');
 
 
 
 					// Single event without memory
-					events.addEventListener(i + '_testListener5', i + '_testEvent1', testListener5);
+					aps.addEventListener(i + '_testListener5', i + '_testEvent1', testListener5);
 
 
 
 					// Single event with memory
-					events.addEventListener(i + '_testListener6', i + '_testEvent1', testListener6, true);
+					aps.addEventListener(i + '_testListener6', i + '_testEvent1', testListener6, true);
 
 
 
 					// Second batch of events
-					events.dispatchEvent(i + '_testEvent1', 'firstArgument' + arguments1[i], 'secondArgument' + arguments1[i]);
-					events.dispatchEvent(i + '_testEvent2');
-					events.dispatchEvent(i + '_testEvent3');
+					aps.dispatchEvent(i + '_testEvent1', 'firstArgument' + arguments1[i], 'secondArgument' + arguments1[i]);
+					aps.dispatchEvent(i + '_testEvent2');
+					aps.dispatchEvent(i + '_testEvent3');
 
 
 
 					// Single event with memory, destroying itself
-					events.addSingleFireEventListener(i + '_testListener7', i + '_testEvent1', testListener7, true);
+					aps.addSingleFireEventListener(i + '_testListener7', i + '_testEvent1', testListener7, true);
 
 
 
 					// Concluding event
-					events.addEventListener(i + '_testFinalListener', i + '_testEvent3', function() {
+					aps.addEventListener(i + '_testFinalListener', i + '_testEvent3', function() {
 
 						if(config.verbose) console.log('FINISHED');
 
@@ -290,16 +290,16 @@ angular.module('events', [
 						// Removing one eventListener via its return function
 						removeFunctions[cycle]();
 						// Remove the rest via its direct name
-						events.removeEventListener(cycle + '_testListener1');
-						events.removeEventListener('anonymousListener0');
-						events.removeEventListener(cycle + '_testListener3');
-						events.removeEventListener(cycle + '_testListener4');
-						events.removeEventListener(cycle + '_testListener5');
-						events.removeEventListener(cycle + '_testListener6');
-						events.removeEventListener(cycle + '_testFinalListener');
-						events.removeEventFromMemory(cycle + '_testEvent1');
-						events.removeEventFromMemory(cycle + '_testEvent2');
-						events.removeEventFromMemory(cycle + '_testEvent3');
+						aps.removeEventListener(cycle + '_testListener1');
+						aps.removeEventListener('anonymousListener0');
+						aps.removeEventListener(cycle + '_testListener3');
+						aps.removeEventListener(cycle + '_testListener4');
+						aps.removeEventListener(cycle + '_testListener5');
+						aps.removeEventListener(cycle + '_testListener6');
+						aps.removeEventListener(cycle + '_testFinalListener');
+						aps.removeEventFromMemory(cycle + '_testEvent1');
+						aps.removeEventFromMemory(cycle + '_testEvent2');
+						aps.removeEventFromMemory(cycle + '_testEvent3');
 					});
 
 					//console.timeEnd(testName);
@@ -349,7 +349,7 @@ angular.module('events', [
 					} else { debugger; }
 
 
-					events.clearAll();
+					aps.removeAll();
 
 					deferred.resolve();
 

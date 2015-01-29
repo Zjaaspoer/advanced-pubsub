@@ -13,11 +13,11 @@ app.get('/', function (req, res) {
 });
 
 // event.js
-app.get('/events.js', function (req, res) {
-	res.sendFile(__dirname + '/events.js');
+app.get('/advancedPubSub.js', function (req, res) {
+	res.sendFile(__dirname + '/advancedPubSub.js');
 });
-app.get('/eventsOpt.js', function (req, res) {
-	res.sendFile(__dirname + '/eventsOpt.js');
+app.get('/advancedPubSubOpt.js', function (req, res) {
+	res.sendFile(__dirname + '/advancedPubSubOpt.js');
 });
 
 app.listen(3000);

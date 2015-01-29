@@ -1,6 +1,6 @@
 'use strict';
-angular.module('awesome.services.events', [])
-	.provider('events', function() {
+angular.module('advancedPubSubOpt', [])
+	.provider('apsOpt', function() {
 
 
 
@@ -24,7 +24,7 @@ angular.module('awesome.services.events', [])
 
 
 		// Create the factory
-		this.$get = function eventsFactory(
+		this.$get = function apsOptFactory(
 			$injector
 		) {
 
@@ -44,7 +44,7 @@ angular.module('awesome.services.events', [])
 					'callListener (multi)':				'color:rgb(  0,  0,128)',
 					dispatchEvent:						'color:rgb(255,  0,255)',
 					'memory: remove':					'color:rgb(  0,128,128)',
-					'listeners: remove':					'color:rgb(128,128,  0)',
+					'listeners: remove':				'color:rgb(128,128,  0)',
 					'listener: remove':					'color:rgb(128,  0,128)'
 				};
 
@@ -107,19 +107,19 @@ angular.module('awesome.services.events', [])
 						throw new Error('(Optional) checkMemory should be a boolean');
 
 					// Loop over the eventRefs
-					each(eventRefs, function(eventRef) {
+					for (var i17 = 0, length17 = eventRefs.length; i17 < length17; i17++) {if (eventRefs[i17] !== null) {
 
 						// If listenerNames are provided for both the new listener as the listener we are checking, you can compare by listenerName
-						if (listenerNameProvided && eventRef.listenerNameProvided) {
+						if (listenerNameProvided && eventRefs[i17].listenerNameProvided) {
 
 							// If a singleListener with the same listenerName can be found
-							if (findByKey(eventRef.singleListeners, 'listenerName', listenerName))
+							if (findByKey(eventRefs[i17].singleListeners, 'listenerName', listenerName))
 
 								// Throw error
 								throw new Error('Listener \'' + listenerName + '\' is already registered');
 
 							// If a multiListener with the same listenerName can be found
-							if (findByKey(eventRef.multiListeners, 'listenerName', listenerName))
+							if (findByKey(eventRefs[i17].multiListeners, 'listenerName', listenerName))
 
 								// Throw error
 								throw new Error('Listener \'' + listenerName + '\' is already registered');
@@ -129,28 +129,28 @@ angular.module('awesome.services.events', [])
 						// But always check the function profiles
 
 						// Loop over the singleListeners
-						each(eventRef.singleListeners, function(singleListener) {
+						for (var i16 = 0, length16 = eventRefs[i17].singleListeners.length; i16 < length16; i16++) {if (eventRefs[i17].singleListeners[i16] !== null) {
 
 							// If the listeners are the same
-							if (singleListener.listener === listener)
+							if (eventRefs[i17].singleListeners[i16].listener === listener)
 
 								// Throw error
 								throw new Error('This listenerFunction is already added');
 
-						});
+						}}
 
 						// Loop over the singleListeners
-						each(eventRef.multiListeners, function(multiListener) {
+						for (var i15 = 0, length15 = eventRefs[i17].multiListeners.length; i15 < length15; i15++) {if (eventRefs[i17].multiListeners[i15] !== null) {
 
 							// If the listeners are the same
-							if (multiListener.listener === listener)
+							if (eventRefs[i17].multiListeners[i15].listener === listener)
 
 								// Throw error
 								throw new Error('This listenerFunction is already added');
 
-						});
+						}}
 
-					});
+					}}
 
 				}
 
@@ -251,27 +251,27 @@ angular.module('awesome.services.events', [])
 					};
 
 					// Loop over the eventNamesFlat
-					each(newListenerObject.eventNamesFlat, function(eventName) {
+					for (var i14 = 0, length14 = newListenerObject.eventNamesFlat.length; i14 < length14; i14++) {if (newListenerObject.eventNamesFlat[i14] !== null) {
 
 						// Add the listener
-						addListener('multi', eventName, newListenerObject);
+						addListener('multi', newListenerObject.eventNamesFlat[i14], newListenerObject);
 
-					});
+					}}
 
 					// If the eventsMemory should be checked
 					if (checkMemory) {
 
 						// Loop over the eventNamesFlat
-						each(newListenerObject.eventNamesFlat, function(eventName) {
+						for (var i13 = 0, length13 = newListenerObject.eventNamesFlat.length; i13 < length13; i13++) {if (newListenerObject.eventNamesFlat[i13] !== null) {
 
 							// If the arguments are being stored
 							if (config.storeArguments) {
 
 								// If an eventMemoryObject is found
-								if (findByKey(eventMemoryObjects, 'eventName', eventName))
+								if (findByKey(eventMemoryObjects, 'newListenerObject.eventNamesFlat[i13]', newListenerObject.eventNamesFlat[i13]))
 
 									// Add it to the listenerEventsMemory of the listener object
-									newListenerObject.listenerEventsMemory.push(eventName);
+									newListenerObject.listenerEventsMemory.push(newListenerObject.eventNamesFlat[i13]);
 
 							}
 
@@ -279,12 +279,12 @@ angular.module('awesome.services.events', [])
 							else
 
 								// If an eventMemory is found
-								if (indexOf(eventsMemory, eventName) !== -1)
+								if (indexOf(eventsMemory, newListenerObject.eventNamesFlat[i13]) !== -1)
 
 									// Add it to the listenerEventsMemory of the listener object
-									newListenerObject.listenerEventsMemory.push(eventName);
+									newListenerObject.listenerEventsMemory.push(newListenerObject.eventNamesFlat[i13]);
 
-						});
+						}}
 
 						// If the eventNamesObject parses into true
 						if (parseEventNamesObject(newListenerObject.eventNamesObject, newListenerObject.listenerEventsMemory)) {
@@ -401,49 +401,49 @@ angular.module('awesome.services.events', [])
 				if (eventRef) {
 
 					// Loop over the singleListeners
-					each(eventRef.singleListeners, function(singleListener) {
+					for (var i12 = 0, length12 = eventRef.singleListeners.length; i12 < length12; i12++) {if (eventRef.singleListeners[i12] !== null) {
 
 						// Verbose
-						if (config.verbose) console.log('%ccallListener (single):\t\t\t\t%s\t%s', consoleColors['callListener (single)'], eventName, singleListener.listenerName);
+						if (config.verbose) console.log('%ccallListener (single):\t\t\t\t%s\t%s', consoleColors['callListener (single)'], eventName, eventRef.singleListeners[i12].listenerName);
 
 						// Apply the listener
-						singleListener.listener.apply(null, eventArguments);
+						eventRef.singleListeners[i12].listener.apply(null, eventArguments);
 
 						// If this is a singleFire eventListener
-						if (singleListener.singleFire)
+						if (eventRef.singleListeners[i12].singleFire)
 
 							// Remove the eventListener
-							thisService.removeEventListener(singleListener.listenerName);
+							thisService.removeEventListener(eventRef.singleListeners[i12].listenerName);
 
-					});
+					}}
 
 					// Loop over the multiListeners
-					each(eventRef.multiListeners, function(multiListener) {
+					for (var i11 = 0, length11 = eventRef.multiListeners.length; i11 < length11; i11++) {if (eventRef.multiListeners[i11] !== null) {
 
 						// If the eventName does not exist in the listenerEventsMemory yet
-						if (indexOf(multiListener.listenerEventsMemory, eventName) === -1)
+						if (indexOf(eventRef.multiListeners[i11].listenerEventsMemory, eventName) === -1)
 
 							// Push the new eventName into the multiListeners listenerEventsMemory
-							multiListener.listenerEventsMemory.push(eventName);
+							eventRef.multiListeners[i11].listenerEventsMemory.push(eventName);
 
 						// Checks if this listener needs to fire
-						if (parseEventNamesObject(multiListener.eventNamesObject, multiListener.listenerEventsMemory)) {
+						if (parseEventNamesObject(eventRef.multiListeners[i11].eventNamesObject, eventRef.multiListeners[i11].listenerEventsMemory)) {
 
 							// Verbose
-							if (config.verbose) console.log('%ccallListener (multi):\t\t\t\t%s (%s)', consoleColors['callListener (multi)'], eventName, multiListener.listenerName);
+							if (config.verbose) console.log('%ccallListener (multi):\t\t\t\t%s (%s)', consoleColors['callListener (multi)'], eventName, eventRef.multiListeners[i11].listenerName);
 
 							// Call the listener
-							multiListener.listener();
+							eventRef.multiListeners[i11].listener();
 
 							// If this is a singleFire eventListener
-							if (multiListener.singleFire)
+							if (eventRef.multiListeners[i11].singleFire)
 
 								// Remove the eventListener
-								thisService.removeEventListener(multiListener.listenerName);
+								thisService.removeEventListener(eventRef.multiListeners[i11].listenerName);
 
 						}
 
-					});
+					}}
 
 				}
 
@@ -514,18 +514,18 @@ angular.module('awesome.services.events', [])
 				if (eventRef)
 
 					// Loop over the multiListeners
-					each(eventRef.multiListeners, function(multiListener) {
+					for (var i10 = 0, length10 = eventRef.multiListeners.length; i10 < length10; i10++) {if (eventRef.multiListeners[i10] !== null) {
 
 						// Get the index of the eventName in the listenerEventsMemory array
-						var listenerEventMemoryIndex = indexOf(multiListener.listenerEventsMemory, eventName);
+						var listenerEventMemoryIndex = indexOf(eventRef.multiListeners[i10].listenerEventsMemory, eventName);
 
 						// If the eventName is found
 						if (listenerEventMemoryIndex !== -1)
 
 							// Remove the element
-							removeArrayElement(multiListener.listenerEventsMemory, listenerEventMemoryIndex);
+							removeArrayElement(eventRef.multiListeners[i10].listenerEventsMemory, listenerEventMemoryIndex);
 
-					});
+					}}
 
 			};
 
@@ -550,41 +550,41 @@ angular.module('awesome.services.events', [])
 				var listenerFound = false;
 
 				// Loop over the eventRefs
-				each(eventRefs, function(eventRef) {
+				for (var i9 = 0, length9 = eventRefs.length; i9 < length9; i9++) {if (eventRefs[i9] !== null) {
 
 					// Loop over the singleListeners
-					each(eventRef.singleListeners, function(singleListener, iSingleListener) {
+					for (var i8 = 0, length8 = eventRefs[i9].singleListeners.length; i8 < length8; i8++) {if (eventRefs[i9].singleListeners[i8] !== null) {
 
 						// If the listenerName matches
-						if (singleListener.listenerName === listenerName) {
+						if (eventRefs[i9].singleListeners[i8].listenerName === listenerName) {
 
 							// Remove the array element
-							removeArrayElement(eventRef.singleListeners, iSingleListener);
+							removeArrayElement(eventRefs[i9].singleListeners, i8);
 
 							// Set the listenerFound flag to true
 							listenerFound = true;
 
 						}
 
-					});
+					}}
 
 					// Loop over the multiListeners
-					each(eventRef.multiListeners, function(multiListener, iMultiListener) {
+					for (var i7 = 0, length7 = eventRefs[i9].multiListeners.length; i7 < length7; i7++) {if (eventRefs[i9].multiListeners[i7] !== null) {
 
 						// If the listenerName matches
-						if (multiListener.listenerName === listenerName) {
+						if (eventRefs[i9].multiListeners[i7].listenerName === listenerName) {
 
 							// Remove the array element
-							removeArrayElement(eventRef.multiListeners, iMultiListener);
+							removeArrayElement(eventRefs[i9].multiListeners, i7);
 
 							// Set the listenerFound flag to true
 							listenerFound = true;
 
 						}
 
-					});
+					}}
 
-				});
+				}}
 
 				// Checks
 				if (config.checks && !disableCheck)
@@ -615,12 +615,12 @@ angular.module('awesome.services.events', [])
 				if (config.verbose) console.log('%clisteners: remove\t\t\t%s', consoleColors['listeners: remove'], listenerNames);
 
 				// Loop over the listenerNames
-				each(listenerNames, function(listenerName) {
+				for (var i6 = 0, length6 = listenerNames.length; i6 < length6; i6++) {if (listenerNames[i6] !== null) {
 
-					// Remove the listenerName
-					thisService.removeEventListener(listenerName);
+					// Remove the listenerNames[i6]
+					thisService.removeEventListener(listenerNames[i6]);
 
-				});
+				}}
 
 			};
 
@@ -680,21 +680,6 @@ angular.module('awesome.services.events', [])
 
 
 			// Performant each function
-			function each(array, fn) {
-
-				// Loop over the array (cached length)
-				for (var i = 0, length = array.length; i < length; i++)
-
-					// Make sure this value is not null
-					if (array[i] !== null)
-
-						// Execute the fn by passing the value
-						fn(array[i], i);
-
-			}
-
-
-
 			// Performant findByKey function
 			function findByKey(array, key, value) {
 
@@ -721,20 +706,20 @@ angular.module('awesome.services.events', [])
 				eventNamesFlat = eventNamesFlat || [];
 
 				// Loop over the operatorsOriginal
-				each(operatorsOriginal, function(operatorOriginal, i) {
+				for (var i5 = 0, length5 = operatorsOriginal.length; i5 < length5; i5++) {if (operatorsOriginal[i5] !== null) {
 
 					// Only do this fo the even elements (the eventNames / subArrays and not the operators)
-					if (i % 2 === 0) {
+					if (i5 % 2 === 0) {
 
 						// If the operator is a string
-						if (typeof operatorOriginal === 'string') {
+						if (typeof operatorsOriginal[i5] === 'string') {
 
 							// And the value is not already in the array
 							// PERFORMANCE [1] array.push()
-							if (indexOf(eventNamesFlat, operatorOriginal) === -1)
+							if (indexOf(eventNamesFlat, operatorsOriginal[i5]) === -1)
 
 								// Push it in
-								eventNamesFlat.push(operatorOriginal);
+								eventNamesFlat.push(operatorsOriginal[i5]);
 
 						}
 
@@ -742,11 +727,11 @@ angular.module('awesome.services.events', [])
 						else
 
 							// Recurse over that array
-							flattenEventNamesObject(operatorOriginal, eventNamesFlat);
+							flattenEventNamesObject(operatorsOriginal[i5], eventNamesFlat);
 
 					}
 
-				});
+				}}
 
 				// Return the flat array
 				return eventNamesFlat;
@@ -781,13 +766,13 @@ angular.module('awesome.services.events', [])
 				var foundIndex = -1;
 
 				// Loop over the array
-				each(array, function(element, iArray) {
+				for (var i4 = 0, length4 = array.length; i4 < length4; i4++) {if (array[i4] !== null) {
 
-					// If the element is the value we're looking for
-					if (element === value) {
+					// If the array[i4] is the value we're looking for
+					if (array[i4] === value) {
 
 						// Set the foundIndex
-						foundIndex = iArray;
+						foundIndex = i4;
 
 						// Stop this function
 						// NOTE: We need to return foundIndex, because after optimization there is no 'each' function anymore so with a return the complete indexOf function is returned
@@ -795,7 +780,7 @@ angular.module('awesome.services.events', [])
 
 					}
 
-				});
+				}}
 
 				// Return the foundIndex
 				return foundIndex;
@@ -811,43 +796,43 @@ angular.module('awesome.services.events', [])
 				if (config.checks)
 
 					// Loop over the operators
-					each(operatorsOriginal, function(operatorOriginal, i) {
+					for (var i3 = 0, length3 = operatorsOriginal.length; i3 < length3; i3++) {if (operatorsOriginal[i3] !== null) {
 
 						// Even and not a string, array or boolean
-						if (i % 2 === 0 && typeof operatorOriginal !== 'string' && !(operatorOriginal instanceof Array) && typeof operatorOriginal !== 'boolean')
+						if (i3 % 2 === 0 && typeof operatorsOriginal[i3] !== 'string' && !(operatorsOriginal[i3] instanceof Array) && typeof operatorsOriginal[i3] !== 'boolean')
 
 							// Throw error
-							throw new Error('Even element should be a string or a (sub)array. It is of type \'' + typeof operatorOriginal + '\' and of value \'' + operatorOriginal + '\'');
+							throw new Error('Even element should be a string or a (sub)array. It is of type \'' + typeof operatorsOriginal[i3] + '\' and of value \'' + operatorsOriginal[i3] + '\'');
 
 						// Uneven, and not one of the two allowed operators (&& or ||)
-						if (i % 2 === 1 && operatorOriginal !== '&&' && operatorOriginal !== '||')
+						if (i3 % 2 === 1 && operatorsOriginal[i3] !== '&&' && operatorsOriginal[i3] !== '||')
 
 							// Throw error
-							throw new Error('Uneven element should be \'&&\' or \'&&\'. It is of type \'' + typeof operatorOriginal + '\' and of value \'' + operatorOriginal + '\'');
+							throw new Error('Uneven element should be \'&&\' or \'&&\'. It is of type \'' + typeof operatorsOriginal[i3] + '\' and of value \'' + operatorsOriginal[i3] + '\'');
 
-					});
+					}}
 
 				// Step 1: Create a fresh object, copy the arrays, and parse the strings
 				// Init new eventNamesObject
 				var eventNamesObject = [];
 
 				// Loop over all the operators
-				each(operatorsOriginal, function(operatorOriginal, i) {
+				for (var i2 = 0, length2 = operatorsOriginal.length; i2 < length2; i2++) {if (operatorsOriginal[i2] !== null) {
 
 					// Even
-					if (i % 2 === 0) {
+					if (i2 % 2 === 0) {
 
 						// If this is an eventName
-						if (typeof operatorOriginal === 'string')
+						if (typeof operatorsOriginal[i2] === 'string')
 
 							// See if the eventName is part of the listenerEventsMemory
-							eventNamesObject[i] = indexOf(listenerEventsMemory, operatorOriginal) !== -1;
+							eventNamesObject[i2] = indexOf(listenerEventsMemory, operatorsOriginal[i2]) !== -1;
 
 						// Else if this is not a string (and therefore an array)
 						else
 
 							// Just copy the array
-							eventNamesObject[i] = operatorOriginal;
+							eventNamesObject[i2] = operatorsOriginal[i2];
 
 					}
 
@@ -855,9 +840,9 @@ angular.module('awesome.services.events', [])
 					else
 
 						// Just copy the operator
-						eventNamesObject[i] = operatorOriginal;
+						eventNamesObject[i2] = operatorsOriginal[i2];
 
-				});
+				}}
 
 				// Step 2: Resolve all '&&'s
 				// Init iStep2
@@ -935,15 +920,15 @@ angular.module('awesome.services.events', [])
 
 				// Step 4: Parse all the subarrays
 				// Loop over all the elements in the array
-				each(eventNamesObject, function(eventNameObject, i) {
+				for (var i1 = 0, length1 = eventNamesObject.length; i1 < length1; i1++) {if (eventNamesObject[i1] !== null) {
 
 					// If this is a array
-					if (eventNameObject instanceof Array)
+					if (eventNamesObject[i1] instanceof Array)
 
 						// Do a recursive pass
-						eventNamesObject[i] = parseEventNamesObject(eventNameObject, listenerEventsMemory);
+						eventNamesObject[i1] = parseEventNamesObject(eventNamesObject[i1], listenerEventsMemory);
 
-				});
+				}}
 
 				// Step 5: Finally resolve all the '&&'s (for explanation see step 2)
 				// Init step5
@@ -1014,7 +999,7 @@ angular.module('awesome.services.events', [])
 				if (config.nativeEvents)
 
 					// Loop over the native events
-					each(config.nativeEvents, function(nativeEvent) {
+					for (var i0 = 0, length0 = config.nativeEvents.length; i0 < length0; i0++) {if (config.nativeEvents[i0] !== null) {
 
 						// If $rootScope does not exist yet
 						if (!$rootScope)
@@ -1023,14 +1008,14 @@ angular.module('awesome.services.events', [])
 							$rootScope = $injector.get('$rootScope');
 
 						// On the native event
-						$rootScope.$on(nativeEvent, function() {
+						$rootScope.$on(config.nativeEvents[i0], function() {
 
 							// Dispatch the native event
-							thisService.dispatchEvent(['native.' + nativeEvent].concat(arguments));
+							thisService.dispatchEvent(['native.' + config.nativeEvents[i0]].concat(arguments));
 
 						});
 
-					});
+					}}
 
 			})();
 
