@@ -157,7 +157,7 @@ angular.module('events', [
 
 
 					// Single event without memory, destroying itself
-					events.addSelfDestroyingEventListener(i + '_testListener8', i + '_testEvent1', testListener8);
+					events.addSingleFireEventListener(i + '_testListener8', i + '_testEvent1', testListener8);
 
 
 
@@ -265,7 +265,7 @@ angular.module('events', [
 
 
 					// Single event with memory, destroying itself
-					events.addSelfDestroyingEventListener(i + '_testListener7', i + '_testEvent1', testListener7, true);
+					events.addSingleFireEventListener(i + '_testListener7', i + '_testEvent1', testListener7, true);
 
 
 

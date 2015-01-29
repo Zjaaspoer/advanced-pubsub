@@ -51,7 +51,7 @@ angular.module('awesome.services.events5', [])
 
 
 			// Add event listener
-			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, selfDestroying) {
+			thisService.addEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory, singleFire) {
 
 				// Init the listenerNameProvided
 				var listenerNameProvided = true;
@@ -62,8 +62,8 @@ angular.module('awesome.services.events5', [])
 					// Set that listenerName is not provided
 					listenerNameProvided = false;
 
-					// Get the selfDestroying
-					selfDestroying = checkMemory;
+					// Get the singleFire
+					singleFire = checkMemory;
 
 					// Get the checkMemory
 					checkMemory = listener;
@@ -169,7 +169,7 @@ angular.module('awesome.services.events5', [])
 					var newListenerObject = {
 						listenerName: listenerName,
 						listener: listener,
-						selfDestroying: !!selfDestroying,
+						singleFire: !!singleFire,
 						listenerNameProvided: listenerNameProvided
 					};
 
@@ -194,8 +194,8 @@ angular.module('awesome.services.events5', [])
 								// Apply the listener with the stored arguments
 								listener.apply(null, eventMemoryObject.arguments);
 
-								// If this is a selfDestroying eventListener
-								if (selfDestroying)
+								// If this is a singleFire eventListener
+								if (singleFire)
 
 									// Remove the eventListener
 									thisService.removeEventListener(listenerName);
@@ -216,8 +216,8 @@ angular.module('awesome.services.events5', [])
 								// Call the listener
 								listener(eventName);
 
-								// If this is a selfDestroying eventListener
-								if (selfDestroying)
+								// If this is a singleFire eventListener
+								if (singleFire)
 
 									// Remove the eventListener
 									thisService.removeEventListener(listenerName);
@@ -246,7 +246,7 @@ angular.module('awesome.services.events5', [])
 						eventNamesFlat: flattenEventNamesObject(eventNamesObject),
 						listener: listener,
 						listenerEventsMemory: [],
-						selfDestroying: !!selfDestroying,
+						singleFire: !!singleFire,
 						listenerNameProvided: listenerNameProvided
 					};
 
@@ -295,8 +295,8 @@ angular.module('awesome.services.events5', [])
 							// Call the listener
 							listener();
 
-							// If this is a selfDestroying eventListener
-							if (selfDestroying)
+							// If this is a singleFire eventListener
+							if (singleFire)
 
 								// Remove the eventListener
 								thisService.removeEventListener(listenerName);
@@ -320,8 +320,8 @@ angular.module('awesome.services.events5', [])
 
 
 
-			// Add selfDestroying eventListener
-			thisService.addSelfDestroyingEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
+			// Add singleFire eventListener
+			thisService.addSingleFireEventListener = function(listenerName, eventNameOrEventNamesObject, listener, checkMemory) {
 
 				// Pass through
 				return thisService.addEventListener(listenerName, eventNameOrEventNamesObject, listener, checkMemory, true);
@@ -409,8 +409,8 @@ angular.module('awesome.services.events5', [])
 						// Apply the listener
 						singleListener.listener.apply(null, eventArguments);
 
-						// If this is a selfDestroying eventListener
-						if (singleListener.selfDestroying)
+						// If this is a singleFire eventListener
+						if (singleListener.singleFire)
 
 							// Remove the eventListener
 							thisService.removeEventListener(singleListener.listenerName);
@@ -435,8 +435,8 @@ angular.module('awesome.services.events5', [])
 							// Call the listener
 							multiListener.listener();
 
-							// If this is a selfDestroying eventListener
-							if (multiListener.selfDestroying)
+							// If this is a singleFire eventListener
+							if (multiListener.singleFire)
 
 								// Remove the eventListener
 								thisService.removeEventListener(multiListener.listenerName);
