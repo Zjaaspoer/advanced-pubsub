@@ -16,11 +16,11 @@ module.exports = function(grunt) {
 			},
 			optimizeIterations: {
 				files: [
-					'static/events2.js',
-					'static/events3.js',
-					'static/events4.js',
-					'static/events5.js',
-					'gruntfile.js'
+					//'static/events2.js',
+					//'static/events3.js',
+					//'static/events4.js',
+					'advancedPubSub.js'//,
+					//'gruntfile.js'
 				],
 				tasks: [
 					'optimizeIterations'
@@ -28,9 +28,9 @@ module.exports = function(grunt) {
 			}
 		},
 		optimizeIterations: {
-			2: {options: {name: 'events2'}},
-			3: {options: {name: 'events3'}},
-			4: {options: {name: 'events4'}},
+			//2: {options: {name: 'events2'}},
+			//3: {options: {name: 'events3'}},
+			//4: {options: {name: 'events4'}},
 			aps: {options: {name: 'aps'}}
 		}
 	});
