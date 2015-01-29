@@ -43,9 +43,9 @@ angular.module('awesome.services.events5', [])
 					'callListener (single)':			'color:rgb(  0,  0,255)',
 					'callListener (multi)':				'color:rgb(  0,  0,128)',
 					dispatchEvent:						'color:rgb(255,  0,255)',
-					'memory: clear':					'color:rgb(  0,128,128)',
-					'listeners: clear':					'color:rgb(128,128,  0)',
-					'listener: clear':					'color:rgb(128,  0,128)'
+					'memory: remove':					'color:rgb(  0,128,128)',
+					'listeners: remove':					'color:rgb(128,128,  0)',
+					'listener: remove':					'color:rgb(128,  0,128)'
 				};
 
 
@@ -330,10 +330,10 @@ angular.module('awesome.services.events5', [])
 
 
 
-			// Clear all (mainly for testing purposes)
-			thisService.clearAll = function() {
+			// Remove all (mainly for testing purposes)
+			thisService.removeAll = function() {
 
-				// Clear all arrays
+				// Remove all arrays
 				while (eventsMemory.length > 0) eventsMemory.pop();
 				while (eventMemoryObjects.length > 0) eventMemoryObjects.pop();
 				while (eventRefs.length > 0) eventRefs.pop();
@@ -451,8 +451,8 @@ angular.module('awesome.services.events5', [])
 
 
 
-			// Clear an event from eventsMemory
-			thisService.clearEventFromMemory = function(eventName, disableCheck) {
+			// Remove an event from eventsMemory
+			thisService.removeEventFromMemory = function(eventName, disableCheck) {
 
 				// Checks
 				if (config.checks)
@@ -464,7 +464,7 @@ angular.module('awesome.services.events5', [])
 						throw new Error('eventName should be a non empty string');
 
 				// Verbose
-				if (config.verbose) console.log('%cmemory: clear\t\t\t\t\t\t%s', consoleColors['memory: clear'], eventName);
+				if (config.verbose) console.log('%cmemory: remove\t\t\t\t\t\t%s', consoleColors['memory: remove'], eventName);
 
 				// If the arguments are being stored
 				if (config.storeArguments) {
@@ -482,7 +482,7 @@ angular.module('awesome.services.events5', [])
 					else if (config.checks && !disableCheck)
 
 						// Throw error
-						throw new Error('During clearEventFromMemory the eventName \'' + eventName + '\' could not be found');
+						throw new Error('During removeEventFromMemory the eventName \'' + eventName + '\' could not be found');
 
 
 				}
@@ -503,7 +503,7 @@ angular.module('awesome.services.events5', [])
 					else if (config.checks && !disableCheck)
 
 						// Throw error
-						throw new Error('During clearEventFromMemory the eventName \'' + eventName + '\' could not be found');
+						throw new Error('During removeEventFromMemory the eventName \'' + eventName + '\' could not be found');
 
 				}
 
@@ -544,7 +544,7 @@ angular.module('awesome.services.events5', [])
 						throw new Error('listenerName should be a non empty string');
 
 				// Verbose
-				if (config.verbose) console.log('%clistener: clear\t\t\t\t\t%s', consoleColors['listener: clear'], listenerName);
+				if (config.verbose) console.log('%clistener: remove\t\t\t\t\t%s', consoleColors['listener: remove'], listenerName);
 
 				// Init the flag listenerFound
 				var listenerFound = false;
@@ -612,7 +612,7 @@ angular.module('awesome.services.events5', [])
 						throw new Error('listenerNames should be an array');
 
 				// Verbose
-				if (config.verbose) console.log('%clisteners: clear\t\t\t%s', consoleColors['listeners: clear'], listenerNames);
+				if (config.verbose) console.log('%clisteners: remove\t\t\t%s', consoleColors['listeners: remove'], listenerNames);
 
 				// Loop over the listenerNames
 				each(listenerNames, function(listenerName) {

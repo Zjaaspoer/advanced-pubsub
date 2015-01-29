@@ -297,9 +297,9 @@ angular.module('events', [
 						events.removeEventListener(cycle + '_testListener5');
 						events.removeEventListener(cycle + '_testListener6');
 						events.removeEventListener(cycle + '_testFinalListener');
-						events.clearEventFromMemory(cycle + '_testEvent1');
-						events.clearEventFromMemory(cycle + '_testEvent2');
-						events.clearEventFromMemory(cycle + '_testEvent3');
+						events.removeEventFromMemory(cycle + '_testEvent1');
+						events.removeEventFromMemory(cycle + '_testEvent2');
+						events.removeEventFromMemory(cycle + '_testEvent3');
 					});
 
 					//console.timeEnd(testName);
