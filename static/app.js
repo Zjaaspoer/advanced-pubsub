@@ -21,7 +21,7 @@ while (arguments1.length < cycles.length)
 	arguments1.push(String(Math.random()));
 
 angular.module('events', [
-	'awesome.services.events',
+	'awesome.services.events1',
 	'awesome.services.events2',
 	'awesome.services.events3',
 	'awesome.services.events4',
@@ -32,7 +32,7 @@ angular.module('events', [
 	'awesome.services.events5Opt'
 ])
 	.config(function(
-		eventsProvider,
+		events1Provider,
 		events2Provider,
 		events3Provider,
 		events4Provider,
@@ -43,7 +43,7 @@ angular.module('events', [
 		events5OptProvider
 	) {
 
-		eventsProvider.config(config);
+		events1Provider.config(config);
 		events2Provider.config(config);
 		events3Provider.config(config);
 		events4Provider.config(config);
@@ -55,7 +55,7 @@ angular.module('events', [
 
 	})
 	.controller('AppController', function(
-		events,
+		events1,
 		events2,
 		events3,
 		events4,
@@ -67,7 +67,7 @@ angular.module('events', [
 	) {
 
 		var eventsRefs = {
-			//events: events,
+			//events1: events1,
 			//events2: events2,
 			//events3: events3,
 			//events4: events4,
